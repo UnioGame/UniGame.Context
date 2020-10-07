@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniContextData.Runtime
+﻿namespace UniModules.UniContextData.Runtime
 {
     using System;
     using System.Collections.Generic;

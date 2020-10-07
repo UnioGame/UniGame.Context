@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniGame.SerializableContext.Runtime.Scriptable
+﻿namespace UniModules.UniGame.SerializableContext.Runtime.Scriptable
 {
     using System.Collections.Generic;
     using Cysharp.Threading.Tasks;

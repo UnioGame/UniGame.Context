@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniContextData.Runtime.Interfaces
+﻿namespace UniModules.UniContextData.Runtime.Interfaces
 {
     using UniCore.Runtime.Interfaces;
 

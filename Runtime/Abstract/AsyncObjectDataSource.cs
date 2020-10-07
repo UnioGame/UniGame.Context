@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniGreenModules.UniGame.Context.Runtime.Context
+namespace UniModules.UniGame.Context.Runtime.Context
 {
     using Cysharp.Threading.Tasks;
     using UniContextData.Runtime.Interfaces;

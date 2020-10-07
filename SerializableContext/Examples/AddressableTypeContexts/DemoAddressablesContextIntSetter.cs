@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniGame.SerializableContext.Examples.AddressableTypeContexts
+﻿namespace UniModules.UniGame.SerializableContext.Examples.AddressableTypeContexts
 {
     using Runtime;
     using UniModules.UniGame.SerializableContext.Runtime.AssetTypes;

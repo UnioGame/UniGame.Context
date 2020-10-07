@@ -4,8 +4,8 @@
     using Addressables;
     using Context.Runtime.Abstract;
     using Cysharp.Threading.Tasks;
-    using UniGreenModules.UniCore.Runtime.Interfaces;
-    using UniGreenModules.UniGame.AddressableTools.Runtime.Extensions;
+    using UniModules.UniCore.Runtime.Interfaces;
+    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     
     using UnityEngine;
 

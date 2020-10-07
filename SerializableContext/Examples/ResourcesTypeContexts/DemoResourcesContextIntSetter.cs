@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniGame.SerializableContext.Examples.ResourcesTypeContexts
+﻿namespace UniModules.UniGame.SerializableContext.Examples.ResourcesTypeContexts
 {
     using Runtime;
     using UniModules.UniGame.SerializableContext.Runtime.AssetTypes;

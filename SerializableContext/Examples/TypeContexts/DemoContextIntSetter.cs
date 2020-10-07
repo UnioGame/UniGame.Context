@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniGreenModules.UniGame.SerializableContext.Examples.TypeContexts
+namespace UniModules.UniGame.SerializableContext.Examples.TypeContexts
 {
     using Runtime;
     using UniModules.UniGame.SerializableContext.Runtime.AssetTypes;

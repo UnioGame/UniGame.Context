@@ -1,4 +1,4 @@
-﻿namespace UniGreenModules.UniGame.SerializableContext.Runtime.Addressables
+﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
 {
     using System;
     using UniContextData.Runtime.Interfaces;

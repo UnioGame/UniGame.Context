@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
 {
     using System;
-    using UniGreenModules.UniCore.Runtime.Interfaces;
+    using UniModules.UniCore.Runtime.Interfaces;
 
     [Serializable]
     public class AssetReferenceContextValueWriter : AssetReferenceApiT<IValueWriter<IContext>>

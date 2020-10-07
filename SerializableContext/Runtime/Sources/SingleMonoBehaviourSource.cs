@@ -2,7 +2,7 @@
 {
     using Context.Runtime.Abstract;
     using Cysharp.Threading.Tasks;
-    using UniGreenModules.UniCore.Runtime.Interfaces;
+    using UniModules.UniCore.Runtime.Interfaces;
     
     using UnityEngine;
 
