@@ -9,6 +9,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 
     public class TypeValueSource<TValue,TApiValue> : 
         TypeValueAssetSource<TValue, TApiValue>,
+        IAsyncContextDataSource,
         IAsyncSourceValue<TApiValue>
         where TValue : class, TApiValue
         where TApiValue : class
