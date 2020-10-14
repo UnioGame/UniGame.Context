@@ -1,9 +1,10 @@
-﻿using Cysharp.Threading.Tasks;
-using UniModules.UniCore.Runtime.Interfaces;
-
-namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
+﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
-    public interface IAsyncContextPrototype<TValue>
+    using System;
+    using Cysharp.Threading.Tasks;
+    using UniModules.UniCore.Runtime.Interfaces;
+    
+    public interface IAsyncContextPrototype<TValue> : IDisposable
     {
         UniTask<TValue> Create(IContext context);
     }
