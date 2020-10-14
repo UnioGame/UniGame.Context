@@ -5,7 +5,6 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
     using System;
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.ScriptableObjects;
-    using UniCore.Runtime.ProfilerTools;
     using UniModules.UniCore.Runtime.Common;
     using UnityEngine;
 
@@ -31,7 +30,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 
             get {
                 if (contextValue.IsValueType == false && contextValue.Value == null) {
-                    SetValue(GetDefaultValue());
+                    SetValue(CreateValue());
                 }
                 return contextValue.Value;
             }
@@ -57,14 +56,14 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
             contextValue = new ContextValue<TApiValue>();
             LifeTime.AddDispose(contextValue);
             
-            SetValue(GetDefaultValue());
+            SetValue(CreateValue());
             OnInitialize(LifeTime);
         }
 
 
         protected override void OnReset()
         {
-            SetValue(GetDefaultValue());
+            SetValue(CreateValue());
             LifeTime.AddDispose(contextValue);
             LifeTime.AddCleanUpAction(OnResetAction);
         }
@@ -79,7 +78,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         /// Default context value
         /// </summary>
         /// <returns></returns>
-        protected virtual TValue GetDefaultValue() => defaultValue;
+        protected virtual TValue CreateValue() => defaultValue;
 
         /// <summary>
         /// initialize default value state

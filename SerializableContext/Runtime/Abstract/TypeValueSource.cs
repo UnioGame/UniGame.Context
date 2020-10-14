@@ -1,40 +1,65 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
+﻿using UniModules.UniContextData.Runtime.Interfaces;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
+    using Context.SerializableContext.Runtime.Abstract;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniContextData.Runtime.Interfaces;
     using UniModules.UniCore.Runtime.Interfaces;
     using UniModules.UniCore.Runtime.Rx.Extensions;
-    
 
     public class TypeValueSource<TValue,TApiValue> : 
-        TypeValueDefaultAsset<TValue,TApiValue>,
-        ISourceValue<TApiValue>
-        where TValue : class, TApiValue, new() 
+        TypeValueAssetSource<TValue, TApiValue>,
+        IAsyncSourceValue<TApiValue>
+        where TValue : class, TApiValue
         where TApiValue : class
     {
+        #region inspector
+        
         /// <summary>
         /// create instance of SO to prevent original data changes
         /// </summary>
-        public bool createSourceInstance = true;
+        public bool isProtected = true;
+
+        /// <summary>
+        /// if true: any Register call get same ref to value
+        /// </summary>
+        public bool isShared = true;
         
-        private IAsyncContextDataSource sourceValueSource ;
+        #endregion
+
+                
+        private AsyncValueGate<TApiValue> assetGate;
+
+        protected IAsyncContextPrototype<TApiValue> Prototype =>
+            assetGate = assetGate ?? 
+                        new AsyncValueGate<TApiValue>(this, isProtected, isShared).AddTo(LifeTime);
         
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
-            sourceValueSource = sourceValueSource ?? 
-                                new AsyncAssetSourceContainer<TApiValue>().
-                                    Initialize(this, createSourceInstance);
-            await sourceValueSource.RegisterAsync(context);
+            var value = await Prototype.Create(context);
+            if (value is IAsyncContextDataSource dataSource)
+            {
+                await dataSource.RegisterAsync(context);
+            }
+            else
+            {
+                context.Publish(value);
+            }
+            
             return context;
         }
 
-        public ISourceValue<TApiValue> Create()
+        public virtual async UniTask<IAsyncSourceValue<TApiValue>> Create(IContext context)
         {
             var value = Instantiate(this);
             //bind child lifetime to asset source
             value.AddTo(LifeTime);
+
             return value;
         }
+
+        public virtual async UniTask<TApiValue> CreateValue(IContext context) => Value;
+
     }
 
     public class TypeValueSource<TValue> : 
