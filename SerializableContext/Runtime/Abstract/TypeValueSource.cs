@@ -61,6 +61,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 
         public virtual async UniTask<TApiValue> CreateValue(IContext context) => Value;
 
+        protected virtual 
+        
     }
 
     public class TypeValueSource<TValue> : 
