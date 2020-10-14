@@ -46,6 +46,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
             {
                 context.Publish(value);
             }
+
+            await OnRegisterAction(context, value);
             
             return context;
         }
@@ -61,7 +63,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 
         public virtual async UniTask<TApiValue> CreateValue(IContext context) => Value;
 
-        protected virtual 
+        protected virtual async UniTask OnRegisterAction(IContext context, TApiValue apiValue) {
+            
+        }
         
     }
 
