@@ -1,6 +1,6 @@
 namespace UniModules.UniContextData.Runtime.Interfaces
 {
-    using UniCore.Runtime.Interfaces;
+    using UniGame.Core.Runtime.Interfaces;
 
     public interface IContextDataSource
     {

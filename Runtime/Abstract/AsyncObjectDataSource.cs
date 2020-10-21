@@ -2,9 +2,9 @@
 
 namespace UniModules.UniGame.Context.Runtime.Context
 {
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
     using UniContextData.Runtime.Interfaces;
-    using UniCore.Runtime.Interfaces;
 
     public abstract class AsyncObjectDataSource : MonoBehaviour, IAsyncContextDataSource
     {

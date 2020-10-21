@@ -4,8 +4,8 @@
     using Addressables;
     using AddressableTools.Runtime.AssetReferencies;
     using Context.Runtime.Abstract;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniCore.Runtime.Interfaces;
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     
     using UnityEngine;

@@ -1,9 +1,9 @@
 ﻿namespace UniModules.UniGame.Context.Runtime.Abstract
 {
+    using Core.Runtime.Interfaces;
     using Core.Runtime.ScriptableObjects;
     using Cysharp.Threading.Tasks;
     using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Interfaces;
 
     public abstract class AsyncContextDataSource : 
         LifetimeScriptableObject, 

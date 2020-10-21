@@ -1,8 +1,8 @@
 ﻿namespace UniModules.UniContextData.Runtime.Extension
 {
     using System;
-    using UniCore.Runtime.Interfaces;
     using UniCore.Runtime.ObjectPool.Runtime;
+    using UniGame.Core.Runtime.Interfaces;
 
     public static class ContextDataExtension
     {

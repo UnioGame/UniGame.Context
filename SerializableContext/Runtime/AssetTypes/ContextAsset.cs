@@ -4,12 +4,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
     using Abstract;
     using Core.Runtime.DataFlow.Interfaces;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
     using UniCore.Runtime.ProfilerTools;
     using UniModules.UniContextData.Runtime.Entities;
     using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Interfaces;
-    
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/Assets/Context" , fileName = nameof(ContextAsset))]

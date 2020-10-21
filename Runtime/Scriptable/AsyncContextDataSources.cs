@@ -1,8 +1,8 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Runtime.Scriptable
 {
     using System.Collections.Generic;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using UniCore.Runtime.Interfaces;
     using UniCore.Runtime.ObjectPool.Runtime;
     using UniCore.Runtime.ObjectPool.Runtime.Extensions;
     using UniModules.UniGame.Context.Runtime.Abstract;

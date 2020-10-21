@@ -4,8 +4,8 @@ namespace UniModules.UniGame.Context.Runtime.Context
 {
     using System;
     using Core.Runtime.DataFlow.Interfaces;
+    using Core.Runtime.Interfaces;
     using UniCore.Runtime.ProfilerTools;
-    using UniModules.UniCore.Runtime.Interfaces;
     using UniModules.UniCore.Runtime.Rx.Extensions;
     using UniRx;
     using UnityEngine;

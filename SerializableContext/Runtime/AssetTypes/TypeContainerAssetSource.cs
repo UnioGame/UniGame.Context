@@ -3,8 +3,8 @@
     using System;
     using Abstract;
     using Context.Runtime.Abstract;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniCore.Runtime.Interfaces;
     using UniModules.UniGame.Core.Runtime.Rx;
     using UniRx;
     

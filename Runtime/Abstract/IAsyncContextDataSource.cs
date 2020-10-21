@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniContextData.Runtime.Interfaces
 {
     using Cysharp.Threading.Tasks;
-    using UniCore.Runtime.Interfaces;
+    using UniGame.Core.Runtime.Interfaces;
 
     public interface IAsyncContextDataSource
     {

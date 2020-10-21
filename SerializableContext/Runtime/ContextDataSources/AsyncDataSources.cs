@@ -4,10 +4,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
     using System.Collections.Generic;
     using Context.Runtime.Abstract;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
     using UniCore.Runtime.ProfilerTools;
     using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Interfaces;
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UniModules.UniGame.SerializableContext.Runtime.Addressables;
     using UnityEngine;

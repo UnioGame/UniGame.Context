@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniContextData.Runtime.Entities
 {
     using System;
-    using UniCore.Runtime.Interfaces;
+    using UniGame.Core.Runtime.Interfaces;
     using UnityEngine;
 
     public class EntityComponent : MonoBehaviour
