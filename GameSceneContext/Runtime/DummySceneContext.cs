@@ -6,12 +6,14 @@
     using UniCore.Runtime.DataFlow;
     using UniRx;
 
-    public class DummySceneContext : IContext {
+    public class DummyReadOnlySceneContext : ISceneContext {
 
         private IReadOnlyDictionary<Type, IValueContainerStatus> editorValues;
         private LifeTimeDefinition                               lifeTime;
+        private int                                              handle;
+        private IReadOnlyReactiveProperty<bool>                  isActive;
 
-        public DummySceneContext() {
+        public DummyReadOnlySceneContext() {
             editorValues = new Dictionary<Type, IValueContainerStatus>(0);
             lifeTime     = new LifeTimeDefinition();
             lifeTime.Terminate();
@@ -25,7 +27,11 @@
 
         public bool HasValue => false;
 
-        public TData Get<TData>() => default(TData);
+        public IReadOnlyReactiveProperty<bool> IsActive { get; } = Observable.Empty<bool>(false).ToReactiveProperty();
+
+        public IReadOnlyReactiveProperty<SceneStatus> Status { get; } = Observable.Empty<SceneStatus>(SceneStatus.Unload).ToReactiveProperty();
+
+        public TData                                  Get<TData>() => default(TData);
 
         public bool Contains<TData>() => false;
 
@@ -35,7 +41,14 @@
 
         public void Dispose() { }
 
+        public void UpdateSceneStatus() {
+        }
+
         public ILifeTime LifeTime => lifeTime;
-    
+
+        public int    Handle => Int32.MaxValue;
+
+        public string Name => string.Empty;
+
     }
 }

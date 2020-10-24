@@ -1,169 +1,97 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime {
     using System;
-    using System.Collections.Generic;
-    using Abstract;
     using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Extension;
-    using Core.Runtime.Interfaces;
+    using Core.Runtime.Rx;
     using UniContextData.Runtime.Entities;
     using UniCore.Runtime.DataFlow;
-    using UniCore.Runtime.Rx.Extensions;
     using UniRx;
-    using UnityEngine.SceneManagement;
 
     [Serializable]
-    public class SceneContext : ISceneContext 
-    {
-                
-        private static DummySceneContext dummySceneContext = new DummySceneContext();
+    public class SceneContext : ISceneContext {
+        
+        private readonly LifeTimeDefinition            _lifeTime = new LifeTimeDefinition();
+        private readonly EntityContext                 _context  = new EntityContext();
+        private readonly RecycleReactiveProperty<SceneStatus> _status   = new RecycleReactiveProperty<SceneStatus>(SceneStatus.Unload);
+        private readonly RecycleReactiveProperty<bool> _isActive = new RecycleReactiveProperty<bool>(false);
+        
+        private readonly int       _sceneHandle;
+        private          SceneInfo _sceneInfo;
+        private          int       _handle;
 
-        private LifeTimeDefinition _lifeTime;
-        private Dictionary<int,IContext> _sceneContexts;
-        private Subject<SceneContextHandle> _sceneSubject;
-
-        public SceneContext() {
-            
-            _lifeTime      = new LifeTimeDefinition();
-            _sceneContexts = new Dictionary<int, IContext>(8);
-            
-            _sceneSubject = new Subject<SceneContextHandle>().AddTo(_lifeTime);
-
-            //release all existing contexts
-            _lifeTime.AddCleanUpAction(() => {
-                _sceneContexts.ForEach(x => x.Value.Release());
-                _sceneContexts.Clear();
-            });
-            
-            //bind with scene events
-            Initialize();
+        public SceneContext(int handle) 
+        {
+            _sceneHandle  = handle;
+            UpdateSceneStatus();
         }
 
-        /// <summary>
-        /// we must clean all refs before die
-        /// </summary>
-        ~SceneContext() => _lifeTime.Release();
+        public int    Handle => _handle;
 
-        #region properties
+        public string Name => _sceneInfo.name;
+
+        public IReadOnlyReactiveProperty<SceneStatus> Status => _status;
         
-        /// <summary>
-        /// scene context lifetime
-        /// </summary>
+        public IReadOnlyReactiveProperty<bool> IsActive => _isActive;
+
         public ILifeTime LifeTime => _lifeTime;
 
-        /// <summary>
-        /// always return context for current active scene
-        /// </summary>
-        public IReadOnlyContext Active { get; private set; }
+        #region base equals override
 
-        /// <summary>
-        /// changes in current active SceneContexts ot statuses
-        /// </summary>
-        public IObservable<SceneContextHandle> SceneContextAction => _sceneSubject;
-
-        #endregion
-
-        public void Dispose() {
-            _lifeTime.Release();
-            GC.SuppressFinalize(this);
-        }
-
-        public IReadOnlyContext Get(int sceneHandle) => Find(sceneHandle);
-        
-        public void Release(int sceneHandle) => Find(sceneHandle).Release();
-
-        public SceneContextHandle GetSceneHandle(int sceneHandle) {
-
-            var context  = Find(sceneHandle);
-            var status = context == dummySceneContext ? SceneContextStatus.Unload :
-                context == Active ? SceneContextStatus.Active : SceneContextStatus.Loaded;
-            
-            var handle = new SceneContextHandle(sceneHandle,context,status);
-            return handle;
+        public override int            GetHashCode() => _sceneHandle;
+     
+        public bool Equals(SceneContext obj) {
+            return _sceneHandle == obj._sceneHandle;
         }
         
-        
-        #region private methods
-        
-        #region scene events
-
-        private void OnSceneUnload(Scene scene) => Remove(scene);
-        
-        private void OnSceneLoad(Scene scene,LoadSceneMode mode) {
-            var handle                   = scene.handle;
-            var context                  = GetOrCreate(handle);
-            if (Active == null) Active = context;
-            var status                   = Active == context ? SceneContextStatus.Active : SceneContextStatus.Loaded;
-            FireSceneStatus(status,handle);
-        }
-        
-        private void OnActiveSceneChanged(Scene fromScene, Scene toScene) {
-            Active = GetOrCreate(toScene.handle);
-            FireSceneStatus(SceneContextStatus.Active,toScene.handle);
+        public bool Equals(IReadOnlySceneContext obj) {
+            return _handle == obj.Handle;
         }
 
-        #endregion
+        public override bool Equals(object obj) {
+            if (obj is SceneContext handle) {
+                return handle._sceneHandle == _sceneHandle;
+            }
 
-        private void Initialize() {
-            Connect();
-            Active = Find(SceneManager.GetActiveScene().handle);
+            return base.Equals(obj);
         }
 
-        private void Connect() {
-            
-            Observable.FromEvent(
-                    x => SceneManager.sceneLoaded += OnSceneLoad, 
-                    x => SceneManager.sceneLoaded -= OnSceneLoad).
-                Subscribe().
-                AddTo(_lifeTime);
-            
-            Observable.FromEvent(
-                    x => SceneManager.sceneUnloaded += OnSceneUnload, 
-                    x => SceneManager.sceneUnloaded -= OnSceneUnload).
-                Subscribe().
-                AddTo(_lifeTime);
-            
-            Observable.FromEvent(
-                    x => SceneManager.activeSceneChanged += OnActiveSceneChanged, 
-                    x => SceneManager.activeSceneChanged -= OnActiveSceneChanged).
-                Subscribe().
-                AddTo(_lifeTime);
-            
+        public static bool operator ==(SceneContext obj1, IReadOnlySceneContext obj2) {
+            return obj1?.Handle == obj2?.Handle;
         }
 
-        private void FireSceneStatus(SceneContextStatus status, int sceneHandle) {
-
-            var context      = Find(sceneHandle);
-            var statusHandle = new SceneContextHandle(sceneHandle,context,status);
-            context.Publish(statusHandle);
-            _sceneSubject.OnNext(statusHandle);
-        }
-        
-        private IContext Find(int sceneHandle) {
-            if (_sceneContexts.TryGetValue(sceneHandle, out var context))
-                return context;
-            return dummySceneContext;
-        }
-
-        private IContext GetOrCreate(int sceneHandle) {
-            var context = Find(sceneHandle);
-            if (context != dummySceneContext)
-                return context;
-            context                     = new EntityContext();
-            _sceneContexts[sceneHandle] = context;
-            return context;
-        }
-
-        private void Remove(Scene scene) => Remove(scene.handle);
-        
-        private void Remove(int sceneHandle) {
-            var context     = Find(sceneHandle);
-                        
-            FireSceneStatus(SceneContextStatus.Unload,sceneHandle);
-
-            context.Dispose();
-            _sceneContexts.Remove(sceneHandle);
+        public static bool operator !=(SceneContext obj1, IReadOnlySceneContext obj2) {
+            return obj1?.Handle != obj2?.Handle;
         }
         
         #endregion
+
+        #region context api
+
+        public void Dispose() => Release();
+
+        public void Release() { 
+            _status.Value   = SceneStatus.Unload;
+            _isActive.Value = false;
+            _context.Release();
+        }
+
+        public IObservable<T> Receive<T>() => _context.Receive<T>();
+
+        public void Publish<T>(T message) => _context.Publish(message);
+        
+        public bool HasValue => _context.HasValue;
+
+        public TData Get<TData>() => _context.Get<TData>();
+
+        public bool Contains<TData>() => _context.Contains<TData>();
+
+        public bool Remove<TData>() => _context.Remove<TData>();
+        
+        #endregion
+        
+        public void UpdateSceneStatus() {
+            _sceneInfo      = SceneManagerUtils.GetSceneInfo(_sceneHandle);
+            _status.Value   = _sceneInfo.status;
+            _isActive.Value = _sceneInfo.isActive;
+        }
     }
 }
