@@ -135,20 +135,34 @@
         
         #region messages
 
-        public static IObservable<TValue> ReceiveFromScene<TValue>(int sceneHanle) {
-
+        /// <summary>
+        /// receive data from Any SceneContext
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        public static IObservable<TValue> ReceiveFromAnyScene<TValue>(this object source) {
+            return scenesContext.Receive<TValue>();
+        }
+        
+        public static IObservable<TValue> ReceiveFromScene<TValue>(this object source,int sceneHanle) {
             var sceneThread = NotifyOnSceneContext(sceneHanle, SceneStatus.Loaded).
                 Select(x => x.Receive<TValue>()).
                 Switch();
             return sceneThread;
         }
         
-        public static IObservable<TValue> ReceiveFromScene<TValue>(string sceneName) {
+        public static IObservable<TValue> ReceiveFromScene<TValue>(this object source,string sceneName) {
 
             var sceneThread = NotifyOnSceneContext(sceneName, SceneStatus.Loaded).
                 Select(x => x.Receive<TValue>()).
                 Switch();
             return sceneThread;
+        }
+
+        public static void PublishToAllScenes<TValue>(this object source, TValue value) {
+            foreach (var context in scenesContext.SceneContexts) {
+                context.Publish(value);
+            }
         }
 
         public static void PublishToScene<TValue>(this object source,string name, TValue value) {

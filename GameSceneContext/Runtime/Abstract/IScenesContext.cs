@@ -1,10 +1,11 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime.Abstract {
     using System;
-    using Core.Runtime.Interfaces;
+    using System.Collections.Generic;
     using UniRx;
 
     public interface IScenesContext
     {
+        IEnumerable<IReadOnlySceneContext> SceneContexts { get; }
 
         /// <summary>
         /// always return context for current active scene

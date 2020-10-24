@@ -10,7 +10,9 @@
     using UnityEngine.SceneManagement;
 
     [Serializable]
-    public class ScenesContext : IScenesContext 
+    public class ScenesContext : 
+        IScenesContext ,
+        IMessageReceiver
     {
         private static DummyReadOnlySceneContext dummyReadOnlySceneContext = new DummyReadOnlySceneContext();
 
@@ -20,12 +22,13 @@
         private          Dictionary<int, ISceneContext>          _sceneContexts;
         private          ReactiveProperty<IReadOnlySceneContext> _activeContext;
         private          Subject<IReadOnlySceneContext>          _sceneContextChanged;
+        private          MessageBroker                           _messageBroker = new MessageBroker();
 
         public ScenesContext(ISceneEventsProvider eventsProvider) {
-            _lifeTime       = new LifeTimeDefinition();
-            _sceneContexts  = new Dictionary<int, ISceneContext>(8);
-            _eventsProvider = eventsProvider.AddTo(_lifeTime);
-            _activeContext  = new ReactiveProperty<IReadOnlySceneContext>().AddTo(_lifeTime);
+            _lifeTime            = new LifeTimeDefinition();
+            _sceneContexts       = new Dictionary<int, ISceneContext>(8);
+            _eventsProvider      = eventsProvider.AddTo(_lifeTime);
+            _activeContext       = new ReactiveProperty<IReadOnlySceneContext>().AddTo(_lifeTime);
             _sceneContextChanged = new Subject<IReadOnlySceneContext>().AddTo(_lifeTime);
             //bind with scene events
             Initialize();
@@ -38,6 +41,11 @@
 
 
         #region properties
+
+        /// <summary>
+        /// all current scene contexts
+        /// </summary>
+        public IEnumerable<IReadOnlySceneContext> SceneContexts => _sceneContexts.Values;
 
         /// <summary>
         /// scene context lifetime
@@ -53,7 +61,7 @@
         /// changes in current active SceneContexts ot status
         /// </summary>
         public IReadOnlyReactiveProperty<IReadOnlySceneContext> ActiveContext => _activeContext;
-        
+
         /// <summary>
         /// context changes thread
         /// </summary>
@@ -61,6 +69,13 @@
 
         #endregion
 
+        
+        #region MessageBroker
+
+        public IObservable<TValue> Receive<TValue>() => _messageBroker.Receive<TValue>();
+        
+        #endregion
+        
         public void Dispose() {
             _lifeTime.Terminate();
             GC.SuppressFinalize(this);
@@ -70,7 +85,7 @@
 
         public void Release(int sceneHandle) => Find(sceneHandle).Release();
 
-        
+
         public SceneStatus GetStatus(int sceneHandle) => Find(sceneHandle).Status.Value;
 
         #region private methods
@@ -80,12 +95,11 @@
         private void OnSceneUnload(Scene scene) => Remove(scene);
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode) {
-            var handle  = scene.handle;
+            var handle = scene.handle;
             UpdateSceneContext(handle);
         }
 
-        private void OnActiveSceneChanged(Scene fromScene, Scene toScene) 
-        {
+        private void OnActiveSceneChanged(Scene fromScene, Scene toScene) {
             var previous = Find(fromScene.handle);
             previous.UpdateSceneStatus();
             Active = UpdateSceneContext(toScene.handle);
@@ -119,20 +133,24 @@
         private ISceneContext UpdateSceneContext(int sceneHandle) {
             var context = Find(sceneHandle);
             context.UpdateSceneStatus();
-            
+
             if (!Equals(context, dummyReadOnlySceneContext))
                 return context;
-            
-            //Create new scene context 
-            context                     = new SceneContext(sceneHandle);
-            _sceneContexts[sceneHandle] = context;
 
-            context.Status.
-                CombineLatest(context.IsActive,(x,y) => context).
-                Subscribe(x => _sceneContextChanged.OnNext(context)).
+            //Create new scene context 
+            var sceneContext                     = new SceneContext(sceneHandle);
+            //connect context data with common channel
+            sceneContext.Bind(_messageBroker).AddTo(sceneContext.LifeTime);
+
+            _sceneContexts[sceneHandle] = sceneContext;
+
+            //if status or scene mode changed
+            sceneContext.Status.
+                CombineLatest(sceneContext.IsActive, (x, y) => sceneContext).
+                Subscribe(x => _sceneContextChanged.OnNext(sceneContext)).
                 AddTo(_lifeTime);
-            
-            return context;
+
+            return sceneContext;
         }
 
         private void Remove(Scene scene) => Remove(scene.handle);

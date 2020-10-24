@@ -10,6 +10,21 @@
             return GetSceneInfo(scene);
             
         }
+
+        public static IEnumerable<string> GetScenesNames() {
+            for (int i = 0; i < SceneManager.sceneCount; i++) {
+                var scene = SceneManager.GetSceneAt(i);
+                yield return scene.name;
+            }    
+        }
+        
+        public static IEnumerable<int> GetScenesHandles() {
+            for (int i = 0; i < SceneManager.sceneCount; i++) {
+                var scene = SceneManager.GetSceneAt(i);
+                yield return scene.handle;
+            }    
+        }
+
         
         public static SceneInfo GetSceneInfo(this Scene scene) {
 

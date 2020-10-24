@@ -2,12 +2,16 @@
     using System;
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.Rx;
+    using global::UniGame.UniNodes.NodeSystem.Runtime.Interfaces;
     using UniContextData.Runtime.Entities;
     using UniCore.Runtime.DataFlow;
     using UniRx;
 
     [Serializable]
-    public class SceneContext : ISceneContext {
+    public class SceneContext :
+        ISceneContext ,
+        IConnector<IMessagePublisher>
+    {
         
         private readonly LifeTimeDefinition            _lifeTime = new LifeTimeDefinition();
         private readonly EntityContext                 _context  = new EntityContext();
@@ -64,6 +68,10 @@
         
         #endregion
 
+        
+        public IDisposable Bind(IMessagePublisher connection) => _context.Bind(connection);
+
+        
         #region context api
 
         public void Dispose() => Release();
