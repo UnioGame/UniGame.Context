@@ -11,14 +11,16 @@
     [Serializable]
     public abstract class AsyncSharedContextState<TValue> : IAsyncContextState<TValue>
     {
-        private LifeTimeDefinition _lifeTime = new LifeTimeDefinition();
-        private SemaphoreSlim      _semafore = new SemaphoreSlim(1,1);
-        private bool               _isActive = false;
+        private LifeTimeDefinition _lifeTime;
+        private SemaphoreSlim      _semafore;
+        private bool               _isActive;
         private UniTask<TValue>    _taskHandle;
 
+        private SemaphoreSlim semaphoreSlim => _semafore = (_semafore ?? new SemaphoreSlim(1, 1));
+        
         public async UniTask<TValue> Execute(IContext value)
         {
-            await _semafore.WaitAsync();
+            await semaphoreSlim.WaitAsync();
             try
             {
                 if (!this._isActive) {
@@ -35,10 +37,11 @@
             {
                 //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
                 //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
-                _semafore.Release();
+                semaphoreSlim.Release();
             }
             
             var result = await _taskHandle;
+            
             return result;
         }
 
@@ -47,10 +50,10 @@
             if (!_isActive)
                 return;
 
-            _isActive = false;
-            
             await OnExit();
             
+            _isActive = false;
+
             _lifeTime?.Release();
             
         }

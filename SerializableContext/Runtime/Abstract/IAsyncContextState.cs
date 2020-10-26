@@ -6,4 +6,9 @@
     {
         
     }
+    
+    public interface IAsyncContextState  : IAsyncState<IContext> 
+    {
+        
+    }
 }
