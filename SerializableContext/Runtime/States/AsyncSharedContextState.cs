@@ -23,14 +23,14 @@
             await semaphoreSlim.WaitAsync();
             try
             {
-                if (!this._isActive) {
+                if (!_isActive) {
                     
                     _isActive = true;
                     var contextLifetime = value.
                         LifeTime.
                         Compose(LifeTime);
                     
-                    _taskHandle = this.OnExecute(value, contextLifetime);
+                    _taskHandle = OnExecute(value, contextLifetime);
                 }
             }
             finally
@@ -60,7 +60,7 @@
 
         public ILifeTime LifeTime => _lifeTime = (_lifeTime ?? new LifeTimeDefinition());
 
-        public bool IsActive => this._isActive;
+        public bool IsActive => _isActive;
 
         protected abstract UniTask<TValue> OnExecute(IContext context, ILifeTime executionLifeTime);
 

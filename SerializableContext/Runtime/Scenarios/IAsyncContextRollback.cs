@@ -1,9 +1,8 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Scenarios {
-    using Abstract;
+    using Core.Runtime.Interfaces;
     using UniRx;
 
-    public interface IAsyncScenario : IAsyncContextState<Unit>
-    {
+    public interface IAsyncContextRollback : IAsyncRollback<IContext, Unit> {
         
     }
 }
