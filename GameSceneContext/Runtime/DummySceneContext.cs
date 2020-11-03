@@ -50,5 +50,12 @@
 
         public string Name => string.Empty;
 
+        public IDisposable Bind(IMessagePublisher connection) => Disposable.Empty;
+
+        public int ConnectionsCount => 0;
+
+        public void Disconnect(IMessagePublisher connection) {
+            
+        }
     }
 }

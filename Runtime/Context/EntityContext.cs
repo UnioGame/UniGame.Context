@@ -5,7 +5,6 @@
     using UniCore.Runtime.Common;
     using UniCore.Runtime.DataFlow;
     using UniCore.Runtime.ObjectPool.Runtime.Extensions;
-    using UniGame.Context.Runtime.Connections;
     using UniGame.Core.Runtime.DataFlow;
     using UniGame.Core.Runtime.Interfaces;
     using UniModules.UniGame.Core.Runtime.DataFlow.Interfaces;
@@ -16,7 +15,7 @@
         IContext {
         private TypeData           data;
         private LifeTimeDefinition lifeTimeDefinition;
-        private ContextConnector   broadcaster;
+        private TypeDataBrodcaster broadcaster;
         private int                id;
 
         public EntityContext() {
@@ -24,7 +23,7 @@
             data = new TypeData();
             //context lifetime
             lifeTimeDefinition = new LifeTimeDefinition();
-            broadcaster        = new ContextConnector();
+            broadcaster        = new TypeDataBrodcaster();
 
             id = Unique.GetId();
         }
