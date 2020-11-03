@@ -12,7 +12,7 @@ namespace UniModules.UniGame.Context.Scenarios {
     {
         public float _delay = 2f;
         
-        public async UniTask<Unit> Execute(IContext value) {
+        public async UniTask<AsyncStatus> Execute(IContext value) {
 
             Debug.Log("DelayScenario START");
             
@@ -20,7 +20,7 @@ namespace UniModules.UniGame.Context.Scenarios {
  
             Debug.Log("DelayScenario COMPLETE");
            
-            return Unit.Default;
+            return AsyncStatus.Succeeded;
 
         }
     }

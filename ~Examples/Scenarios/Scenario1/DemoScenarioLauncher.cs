@@ -3,16 +3,18 @@
 namespace UniModules.UniGame.Context.Scenarios.Scenario1 
 {
     using System;
-    using Core.Runtime.AsyncOperations;
-    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
+    using SerializableContext.Runtime.Scenarios;
     using UniContextData.Runtime.Entities;
-    using UniRx;
 
-    public class DemoRegularScenarioLauncher : MonoBehaviour {
+    public class DemoScenarioLauncher : MonoBehaviour {
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+#endif
         [SerializeReference]
-        public AsyncScenario<IAsyncCommand<IContext,Unit>,IContext> scenario = new AsyncScenario<IAsyncCommand<IContext,Unit>, IContext>();
+        public AsyncContextScenario scenario = new AsyncContextScenario();
 
         public int runners = 1;
 

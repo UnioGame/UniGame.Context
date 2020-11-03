@@ -1,8 +1,8 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Scenarios {
     using Abstract;
-    using UniRx;
+    using Core.Runtime.Interfaces;
 
-    public interface IAsyncScenario : IAsyncContextState<Unit>
+    public interface IAsyncScenario : IAsyncContextState<AsyncStatus>
     {
         
     }

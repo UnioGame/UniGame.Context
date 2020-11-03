@@ -2,7 +2,7 @@
     using Core.Runtime.Interfaces;
     using UniRx;
 
-    public interface IAsyncContextRollback : IAsyncRollback<IContext, Unit> {
+    public interface IAsyncContextRollback : IAsyncRollback<IContext> {
         
     }
 }

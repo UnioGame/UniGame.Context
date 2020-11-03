@@ -3,14 +3,16 @@
 namespace UniModules.UniGame.Context.Scenarios.Scenario1 
 {
     using System;
+    using Core.Runtime.AsyncOperations;
+    using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using SerializableContext.Runtime.Scenarios;
     using UniContextData.Runtime.Entities;
+    using UniRx;
 
-    public class DemoScenarioLauncher : MonoBehaviour {
+    public class DemoRegularScenarioLauncher : MonoBehaviour {
 
         [SerializeReference]
-        public AsyncContextScenario scenario = new AsyncContextScenario();
+        public AsyncScenario<IAsyncCommand<IContext,AsyncStatus>,IContext> scenario = new AsyncScenario<IAsyncCommand<IContext,AsyncStatus>, IContext>();
 
         public int runners = 1;
 

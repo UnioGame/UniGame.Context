@@ -2,7 +2,7 @@
     using Core.Runtime.Interfaces;
     using UniRx;
 
-    public interface IAsyncContextCommand : IAsyncCommand<IContext, Unit> {
+    public interface IAsyncContextCommand : IAsyncCommand<IContext, AsyncStatus> {
         
     }
 }
