@@ -51,7 +51,7 @@
         protected sealed override void OnReset()
         {
             base.OnReset();
-            LifeTime.AddCleanUpAction(_value.Release);
+            LifeTime?.AddCleanUpAction(_value.Release);
             ResetValue();
         }
 
