@@ -1,15 +1,15 @@
 ﻿
-namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
+namespace UniModules.UniGame.Context.Runtime.Connections
 {
     using System;
     using System.Runtime.CompilerServices;
-    using UniModules.UniCore.Runtime.Common;
-    using UniModules.UniCore.Runtime.DataFlow;
-    using UniModules.UniCore.Runtime.ObjectPool.Runtime;
-    using UniModules.UniCore.Runtime.ObjectPool.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Rx.Extensions;
-    using UniModules.UniGame.Core.Runtime.DataFlow.Interfaces;
-    using UniModules.UniGame.Core.Runtime.Interfaces;
+    using Core.Runtime.DataFlow.Interfaces;
+    using Core.Runtime.Interfaces;
+    using UniCore.Runtime.Common;
+    using UniCore.Runtime.DataFlow;
+    using UniCore.Runtime.ObjectPool.Runtime;
+    using UniCore.Runtime.ObjectPool.Runtime.Interfaces;
+    using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
     public class TypeDataConnector<TConnection> : 
