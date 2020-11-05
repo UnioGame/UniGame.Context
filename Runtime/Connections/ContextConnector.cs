@@ -7,9 +7,7 @@
     using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
-    public class ContextConnector : 
-        TypeDataConnector<IContext> ,
-        IMessageBroker
+    public class ContextConnector : TypeDataConnector<IContext>, IContextConnector
     {
         private EntityContext _cachedContext = new EntityContext();
 
@@ -17,10 +15,6 @@
             _registeredItems.
                 ObserveRemove().
                 Subscribe(x => x.Value?.Disconnect(_cachedContext));
-        }
-        
-        protected sealed override void OnBind(IContext connection) {
-            
         }
 
         public void Publish<T>(T message) 
@@ -48,18 +42,40 @@
             return _cachedContext.Receive<T>();
         }
 
-        private IDisposable AddContextReceiver<T>(IContext context)
+        #region context api
+
+        public IDisposable Bind(IMessagePublisher connection) => _cachedContext.Bind(connection);
+
+        public void Disconnect(IMessagePublisher connection) => _cachedContext.Disconnect(connection);
+
+        public bool  HasValue     => _cachedContext.HasValue;
+
+        public TData Get<TData>() => _cachedContext.Get<TData>();
+
+        public bool Contains<TData>() => _cachedContext.Contains<TData>();
+
+        public bool Remove<TData>() => _cachedContext.Remove<TData>();
+
+        public void Dispose() => Release();
+        
+        #endregion
+        
+                
+        protected sealed override void OnBind(IContext connection) { }
+
+        private void AddContextReceiver<T>(IContext context)
         {
             if(context == null || context.LifeTime.IsTerminated)
-                return Disposable.Empty;
+                return;
             
             if (context.Contains<T>()) {
                 var value = context.Get<T>();
                 _cachedContext.Publish(value);
             }
             
-            return context.Bind(_cachedContext).
+            context.Bind(_cachedContext).
                 AddTo(LifeTime);
         }
+
     }
 }
