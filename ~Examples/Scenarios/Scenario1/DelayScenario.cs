@@ -4,6 +4,7 @@ namespace UniModules.UniGame.Context.Scenarios {
     using System;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
+    using SerializableContext.Runtime.Abstract;
     using SerializableContext.Runtime.Scenarios;
     using UniRx;
 

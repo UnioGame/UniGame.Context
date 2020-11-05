@@ -5,6 +5,7 @@ using UniRx;
 
 namespace UniModules.UniGame.Context.Scenarios.Scenario1 {
     using System;
+    using SerializableContext.Runtime.Abstract;
     using UnityEngine;
 
     [Serializable]

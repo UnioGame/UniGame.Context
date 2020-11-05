@@ -2,14 +2,13 @@
 {
     using Core.Runtime.Interfaces;
 
-    public interface IAsyncContextState<TValue>  : IAsyncState<IContext,TValue> 
+    public interface IAsyncContextCommand<TValue> : IAsyncCommand<IContext,TValue>
     {
         
     }
     
-    public interface IAsyncContextState  : IAsyncState<IContext> 
+    public interface IAsyncContextCommand : IAsyncCommand<IContext,AsyncStatus>
     {
         
     }
-
 }

@@ -1,6 +1,7 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
     using System;
+    using Context.SerializableContext.Runtime.Abstract;
 
     [Serializable]
     public class TypeValueDefaultAsset<TValue, TApiValue> :
