@@ -5,6 +5,13 @@
     using Core.Runtime.AsyncOperations;
     using Core.Runtime.Interfaces;
 
+    
+    [Serializable]
+    public abstract class AsyncContextState : AsyncContextState<AsyncStatus>
+    {
+        
+    }
+    
     [Serializable]
     public abstract class AsyncContextState<TValue> : 
         AsyncState<IContext,TValue>, 
