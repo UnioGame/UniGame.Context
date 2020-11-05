@@ -1,18 +1,20 @@
-﻿namespace UniModules.UniContextData.Runtime.Entities {
+﻿namespace UniModules.UniGame.Context.Runtime.Context 
+{
     using System;
     using System.Collections.Generic;
+    using Connections;
+    using Core.Runtime.DataFlow;
+    using Core.Runtime.DataFlow.Interfaces;
+    using Core.Runtime.Interfaces;
     using global::UniGame.UniNodes.NodeSystem.Runtime.Connections;
     using UniCore.Runtime.Common;
     using UniCore.Runtime.DataFlow;
     using UniCore.Runtime.ObjectPool.Runtime.Extensions;
-    using UniGame.Core.Runtime.DataFlow;
-    using UniGame.Core.Runtime.Interfaces;
-    using UniModules.UniGame.Core.Runtime.DataFlow.Interfaces;
     using UniRx;
 
     [Serializable]
-    public class EntityContext :
-        IContext {
+    public class EntityContext : IContext 
+    {
         private TypeData           data;
         private LifeTimeDefinition lifeTimeDefinition;
         private TypeDataBrodcaster broadcaster;
@@ -37,6 +39,9 @@
         }
 
         public IDisposable Bind(IMessagePublisher connection) {
+            if(connection == this)
+                return Disposable.Empty;
+            
             var disposable = broadcaster.Bind(connection);
             return disposable;
         }

@@ -1,6 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.Runtime.Connections 
 {
     using System;
+    using Context;
     using Core.Runtime.Interfaces;
     using global::UniGame.UniNodes.NodeSystem.Runtime.Connections;
     using UniContextData.Runtime.Entities;
@@ -9,7 +10,8 @@
 
     public class ContextConnector : 
         TypeDataConnector<IContext> ,
-        IMessageBroker
+        IMessageBroker,
+        IDisposable
     {
         private EntityContext _cachedContext = new EntityContext();
 
@@ -20,7 +22,7 @@
         }
         
         protected sealed override void OnBind(IContext connection) {
-            
+            connection.LifeTime.AddCleanUpAction(() => Disconnect(connection));
         }
 
         public void Publish<T>(T message) 
@@ -39,11 +41,12 @@
             
             //create stream
             foreach (var context in _registeredItems) {
-                AddContextReceiver<T>(context);
+                AddContextReceiver<T>(context).
+                    AddTo(_lifeTime);
             }
 
             _registeredItems.ObserveAdd().
-                Subscribe(x => AddContextReceiver<T>(x.Value));
+                Subscribe(x => AddContextReceiver<T>(x.Value).AddTo(_lifeTime));
             
             return _cachedContext.Receive<T>();
         }
@@ -57,9 +60,30 @@
                 var value = context.Get<T>();
                 _cachedContext.Publish(value);
             }
+
+            _registeredItems.ObserveRemove().
+                Where(x => x.Value == context).
+                Subscribe(x => UpdateValue<T>()).
+                AddTo(_lifeTime);
             
-            return context.Bind(_cachedContext).
-                AddTo(LifeTime);
+            return context.Bind(_cachedContext);
         }
+
+        private void UpdateValue<T>() {
+            
+            foreach (var context in _registeredItems) {
+                if (!context.Contains<T>()) {
+                    continue;
+                }
+
+                var value = context.Get<T>();
+                _cachedContext.Publish(value);
+                return;
+            }
+            
+            _cachedContext.Remove<T>();
+        }
+
+        public void Dispose() => Release();
     }
 }

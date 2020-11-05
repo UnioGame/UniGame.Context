@@ -1,6 +1,7 @@
 ﻿namespace UniModules.UniContextData.Runtime.Entities
 {
     using System;
+    using UniGame.Context.Runtime.Context;
     using UniGame.Core.Runtime.Interfaces;
     using UnityEngine;
 

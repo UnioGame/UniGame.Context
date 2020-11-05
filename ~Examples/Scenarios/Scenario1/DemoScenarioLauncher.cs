@@ -4,6 +4,7 @@ namespace UniModules.UniGame.Context.Scenarios.Scenario1
 {
     using System;
     using Cysharp.Threading.Tasks;
+    using Runtime.Context;
     using SerializableContext.Runtime.Scenarios;
     using UniContextData.Runtime.Entities;
 

@@ -6,6 +6,7 @@ namespace UniModules.UniGame.Context.Scenarios.Scenario1
     using Core.Runtime.AsyncOperations;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
+    using Runtime.Context;
     using UniContextData.Runtime.Entities;
     using UniRx;
 
