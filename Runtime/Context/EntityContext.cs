@@ -13,7 +13,7 @@
     using UniRx;
 
     [Serializable]
-    public class EntityContext : IContext 
+    public class EntityContext : IContext ,ITypeDataConnector<IMessagePublisher>
     {
         private TypeData           data;
         private LifeTimeDefinition lifeTimeDefinition;

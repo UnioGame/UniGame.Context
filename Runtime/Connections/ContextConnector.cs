@@ -17,31 +17,16 @@
                 ObserveRemove().
                 Subscribe(x => x.Value?.Disconnect(_cachedContext));
         }
-
-        public void Dispose() => Release();
         
-        public void Publish<T>(T message) 
-        {
-            foreach (var context in _registeredItems) {
-                context.Publish(message);
-            }
-        }
-        
-        #region context api
+        #region public properties
 
-        public IDisposable Bind(IMessagePublisher connection) => _cachedContext.Bind(connection);
-
-        public void  Disconnect(IMessagePublisher connection) => _cachedContext.Disconnect(connection);
-
-        public bool  HasValue     => _cachedContext.HasValue;
-        public TData Get<TData>() => _cachedContext.Get<TData>();
-
-        public bool Contains<TData>() => _cachedContext.Contains<TData>();
-
-        public bool Remove<TData>() => _cachedContext.Remove<TData>();
+        public IContext Context => _cachedContext;
         
         #endregion
-        
+
+        public void Dispose() => Release();
+
+        public void Publish<T>(T message) => _cachedContext.Publish(message);
 
         public IObservable<T> Receive<T>() {
 
@@ -55,8 +40,10 @@
                 AddContextReceiver<T>(context);
             }
 
-            _registeredItems.ObserveAdd().
-                Subscribe(x => AddContextReceiver<T>(x.Value));
+            _registeredItems.
+                ObserveAdd().
+                Subscribe(x => AddContextReceiver<T>(x.Value)).
+                AddTo(_lifeTime);
             
             return _cachedContext.Receive<T>();
         }
@@ -68,7 +55,7 @@
             
             if (context.Contains<T>()) {
                 var value = context.Get<T>();
-                _cachedContext.Publish(value);
+                Publish(value);
             }
 
             _registeredItems.ObserveRemove().
@@ -76,21 +63,25 @@
                 Subscribe(x => UpdateValue<T>()).
                 AddTo(_lifeTime);
             
-            context.Bind(_cachedContext).AddTo(_lifeTime);
+            context.Bind(_cachedContext).
+                AddTo(_lifeTime);
         }
 
-        private void UpdateValue<T>() {
-            
-            foreach (var context in _registeredItems) {
-                if (!context.Contains<T>()) {
+        private void UpdateValue<T>()
+        {
+            for (var i = _registeredItems.Count - 1; i >= 0 ; i--)
+            {
+                var context = _registeredItems[i];
+                if (!context.Contains<T>())
+                {
                     continue;
                 }
 
                 var value = context.Get<T>();
-                _cachedContext.Publish(value);
+                Publish(value);
                 return;
             }
-            
+
             _cachedContext.Remove<T>();
         }
         

@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-
-namespace UniModules.UniGame.Context.Tests {
+﻿namespace UniModules.UniGame.Context.Tests {
+    using Core.Runtime.Rx;
     using NUnit.Framework;
     using Runtime.Connections;
     using Runtime.Context;
-    using UniContextData.Runtime.Entities;
     using UniRx;
 
     public class ContextConnectionsTests 
@@ -143,12 +141,30 @@ namespace UniModules.UniGame.Context.Tests {
             connector.Bind(context2);
 
             //check
-            connector.Receive<int>().Subscribe(x => Assert.That(x == 20));
+            var disposable = connector.
+                Receive<int>().
+                Subscribe(x => Assert.That(x == 20,$"Connector value is {x}"));
             Assert.That(connector.ConnectionsCount == 2);
+            
+            disposable.Dispose();
             context2.Release();
             
             connector.Receive<int>().Subscribe(x => Assert.That(x == 10));
             Assert.That(connector.ConnectionsCount == 1);
+        }
+
+        [Test]
+        public void ReactivePropertyDisposeTest()
+        {
+            //info
+            var value = new RecycleReactiveProperty<int>();
+            
+            //action
+            var disposable = value.Subscribe(x => Assert.That(x == int.MaxValue));
+            disposable.Dispose();
+            
+            value.Value = 0;
+            Assert.True(true);
         }
         
     }
