@@ -26,7 +26,43 @@
             
             //check
             connector.Receive<int>().Subscribe(x => Assert.That(x == 20));
+        }
+        
+        [Test]
+        public void ContextReceiveTest() {
+            
+            //info
+            var context1  = new EntityContext();
+            var testValue = 100;
+            //action
 
+            context1.Publish(testValue);
+            
+            //check
+            context1.Receive<int>().
+                First().
+                Subscribe(x => Assert.That(x == testValue));
+            context1.Release();
+        }
+        
+        [Test]
+        public void ContextReceiveFirstTest() {
+            
+            //info
+            var context1       = new EntityContext();
+            var textValueFirst = 200;
+            var resultValue    = 0;
+            
+            //action
+            context1.Receive<int>().
+                First().
+                Subscribe(x => resultValue = x);
+            
+            context1.Publish(textValueFirst);
+            context1.Release();
+            
+            //check
+            Assert.That(resultValue == textValueFirst);
         }
         
         [Test]
