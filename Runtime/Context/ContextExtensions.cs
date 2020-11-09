@@ -42,8 +42,7 @@ namespace UniModules.UniGame.Context.Runtime.Context
             return connector;
         }
         
-        
-        public static IObservable<Unit> ReceiveFirst<T>(this IContext targetContext, IContext sourceContext) where T : class
+        public static IObservable<Unit> ReceiveFirst<T>(this IContext targetContext, IMessageReceiver sourceContext) where T : class
         {
             return sourceContext.Receive<T>()
                 .First()
@@ -51,7 +50,7 @@ namespace UniModules.UniGame.Context.Runtime.Context
                 .Do(x => GameLog.Log($"{typeof(T).Name} OnServiceLoaded",Color.magenta))
                 .AsUnitObservable();
         }
-        
+
         public static IObservable<T> ReceiveFirst<T>(this IContext sourceContext, Action<T> action) where T : class
         {
             return sourceContext.Receive<T>()

@@ -3,21 +3,50 @@
     using System;
     using Context;
     using Core.Runtime.Interfaces;
+    using Core.Runtime.Rx;
     using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
     public class ContextConnector : 
         TypeDataConnector<IContext> , 
-        IContextConnector
+        IContextConnector,
+        IResetable
     {
         private EntityContext _cachedContext = new EntityContext();
+        private RecycleReactiveProperty<bool> _isEmpty = new RecycleReactiveProperty<bool>(true);
 
-        public ContextConnector() {
-            _registeredItems.
-                ObserveRemove().
-                Subscribe(x => x.Value?.Disconnect(_cachedContext));
+        public ContextConnector()
+        {
+            Reset();
         }
 
+
+        #region properties
+
+        public IContext Context => _cachedContext;
+        
+        public IReadOnlyReactiveProperty<bool> IsEmpty => _isEmpty;
+
+        #endregion
+        
+        
+        public void Reset()
+        {
+            Release();
+            
+            _registeredItems.
+                ObserveRemove().
+                Subscribe(x => x.Value?.Disconnect(_cachedContext)).
+                AddTo(LifeTime);
+            
+            _registeredItems.ObserveCountChanged().
+                Select(x => x == 0).
+                Subscribe(x => _isEmpty.Value = x).
+                AddTo(LifeTime);
+
+            LifeTime.AddCleanUpAction(Reset);
+        }
+        
         public void Dispose() => Release();
 
         public void Publish<T>(T message) => _cachedContext.Publish(message);
@@ -79,7 +108,7 @@
             _cachedContext.Remove<T>();
         }
         
-        protected sealed override void OnBind(IContext connection) {
+        protected override void OnBind(IContext connection) {
             connection.LifeTime.AddCleanUpAction(() => Disconnect(connection));
         }
 
@@ -87,5 +116,6 @@
         {
             _cachedContext.Release();
         }
+
     }
 }
