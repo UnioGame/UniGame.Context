@@ -30,6 +30,8 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         {
             _lifeTime.Release();
             _registeredItems.Clear();
+            
+            OnRelease();
         }
         
         #endregion
@@ -54,6 +56,10 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         }
 
         protected virtual void OnBind(TConnection connection) { }
+
+        protected virtual void OnRelease()
+        {
+        }
     }
     
 }

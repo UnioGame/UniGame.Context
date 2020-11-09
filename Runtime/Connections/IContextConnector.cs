@@ -2,13 +2,11 @@
 {
     using System;
     using Core.Runtime.Interfaces;
-    using UniRx;
 
     public interface IContextConnector : 
         ITypeDataConnector<IContext>,
-        IMessageBroker,
+        IMessageContext,
         IDisposable
     {
-        IContext Context { get; }
     }
 }

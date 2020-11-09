@@ -17,12 +17,6 @@
                 ObserveRemove().
                 Subscribe(x => x.Value?.Disconnect(_cachedContext));
         }
-        
-        #region public properties
-
-        public IContext Context => _cachedContext;
-        
-        #endregion
 
         public void Dispose() => Release();
 
@@ -89,5 +83,9 @@
             connection.LifeTime.AddCleanUpAction(() => Disconnect(connection));
         }
 
+        protected override void OnRelease()
+        {
+            _cachedContext.Release();
+        }
     }
 }
