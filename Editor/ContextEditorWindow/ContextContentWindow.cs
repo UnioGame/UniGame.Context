@@ -21,20 +21,21 @@
         private ScrollView scrollView;
         private Button     refreshButton;
 
-        public static void Open(ContextDescription source)
+        public static ContextContentWindow Open(ContextDescription source)
         {
-            Open(new List<ContextDescription>() {
+            return Open(new List<ContextDescription>() {
                 source
             });
         }
 
-        public static void Open(List<ContextDescription> sources)
+        public static ContextContentWindow Open(List<ContextDescription> sources)
         {
             var window = GetWindow<ContextContentWindow>();
             window.Initialize(sources);
             window.minSize      = new Vector2(400, 200);
             window.titleContent = new GUIContent("Context Data");
             window.Show();
+            return window;
         }
 
         public void Initialize(List<ContextDescription> sources)
