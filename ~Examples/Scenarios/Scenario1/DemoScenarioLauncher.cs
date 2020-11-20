@@ -28,7 +28,7 @@ namespace UniModules.UniGame.Context.Scenarios.Scenario1
             
             for (var i = 0; i < runners; i++) {
 
-                scenario.Execute(context);
+                scenario.ExecuteAsync(context);
 
                 await UniTask.Delay(TimeSpan.FromSeconds(delay));
             }

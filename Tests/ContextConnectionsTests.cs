@@ -9,6 +9,90 @@
     {
 
         [Test]
+        public void ContextBindPublishTest()
+        {
+            //info
+            var source1 = new EntityContext();
+            var source2 = new EntityContext();
+            var source3 = new EntityContext();
+            var result  = 300;
+            var source  = 1;
+            
+            //action
+            source1.Publish(source);
+            source1.Bind(source2);
+            source2.Bind(source3);
+            
+            source1.Publish(result);
+            
+            //check
+            Assert.That(source3.Get<int>() == result);
+        }
+
+        [Test]
+        public void ContextConnectorDisconnectTest() {
+            
+            //info
+            var connector   = new ContextConnector();
+            var context1    = new EntityContext();
+            var context2    = new EntityContext();
+            var startValue  = 10;
+            var secondValue = 20;
+            var lastValue   = 30;
+            
+            //action
+            context1.Publish(startValue);
+            
+            connector.Bind(context1);
+            connector.Bind(context2);
+
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
+            
+            context2.Publish(20);
+            
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
+            
+            connector.Disconnect(context1);
+            connector.Bind(context1);
+
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
+        }
+        
+        [Test]
+        public void ContextConnectorDisconnectMethodTest() {
+            
+            //info
+            var connector        = new ContextConnector();
+            var context1         = new EntityContext();
+            var context2         = new EntityContext();
+            var startValue       = 10;
+            var secondValue      = 20;
+            var lastValue        = 30;
+            var connectorContext = connector.Context;
+            //action
+            context1.Publish(startValue);
+            
+            var disposable1 = connector.Bind(context1);
+            var disposable2 = connector.Bind(context2);
+
+            
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
+            Assert.That(connectorContext.Get<int>() == startValue);
+            
+            context2.Publish(20);
+            
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
+            Assert.That(connectorContext.Get<int>() == secondValue);
+            
+            disposable1.Dispose();
+            connector.Bind(context1);
+
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
+            Assert.That(connectorContext.Get<int>() == startValue);
+        }
+
+        
+        [Test]
         public void ContextConnectorValueTest() {
             
             //info

@@ -14,7 +14,7 @@ namespace UniModules.UniGame.Context.Scenarios.Scenario1 {
         public float       cancelAfter;
         public AsyncStatus result = AsyncStatus.Canceled;
         
-        public async UniTask<AsyncStatus> Execute(IContext value) {
+        public async UniTask<AsyncStatus> ExecuteAsync(IContext value) {
 
             if(cancelAfter <=0)
                 return result;

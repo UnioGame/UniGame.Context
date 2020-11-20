@@ -8,6 +8,6 @@
         LifetimeScriptableObject, 
         IAsyncCommand<TData,TValue>
     {
-        public abstract UniTask<TValue> Execute(TData value);
+        public abstract UniTask<TValue> ExecuteAsync(TData value);
     }
 }

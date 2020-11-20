@@ -9,7 +9,7 @@
     [Serializable]
     public abstract class AsyncContextState : AsyncContextState<AsyncStatus>
     {
-        
+        protected sealed override AsyncStatus GetInitialExecutionValue() => AsyncStatus.Pending;
     }
     
     [Serializable]
@@ -17,6 +17,5 @@
         AsyncState<IContext,TValue>, 
         IAsyncContextState<TValue>
     {
-   
     }
 }

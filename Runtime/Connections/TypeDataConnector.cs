@@ -39,8 +39,10 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IDisposable Bind(TConnection connection)
         {
-            if (!_registeredItems.Contains(connection))
-                _registeredItems.Add(connection);
+            if (_registeredItems.Contains(connection))
+                return Disposable.Empty;
+            
+            _registeredItems.Add(connection);
             
             var disposable = ClassPool.Spawn<DisposableAction>();
             disposable.Initialize(() => Disconnect(connection));

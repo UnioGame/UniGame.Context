@@ -18,7 +18,7 @@
 
         private SemaphoreSlim semaphoreSlim => _semafore = (_semafore ?? new SemaphoreSlim(1, 1));
         
-        public async UniTask<TValue> Execute(IContext value)
+        public async UniTask<TValue> ExecuteAsync(IContext value)
         {
             await semaphoreSlim.WaitAsync();
             try
@@ -45,7 +45,7 @@
             return result;
         }
 
-        public async UniTask Exit() {
+        public async UniTask ExitAsync() {
 
             if (!_isActive)
                 return;

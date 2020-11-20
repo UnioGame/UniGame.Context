@@ -17,9 +17,9 @@
         
         #region IAsyncContextState
 
-        public sealed override async UniTask<TValue> Execute(TData value) => await _asyncStateProxyValue.Execute(value);
+        public sealed override async UniTask<TValue> ExecuteAsync(TData value) => await _asyncStateProxyValue.ExecuteAsync(value);
 
-        public async UniTask Exit() => await _asyncStateProxyValue.Exit();
+        public async UniTask ExitAsync() => await _asyncStateProxyValue.ExitAsync();
 
         public bool IsActive => _asyncStateProxyValue.IsActive;
         
@@ -27,20 +27,20 @@
 
         #region IAsyncCompletion
 
-        public virtual async UniTask Complete(TValue value, TData data, ILifeTime lifeTime) { }
+        public virtual async UniTask CompleteAsync(TValue value, TData data, ILifeTime lifeTime) { }
         
         #endregion
 
-        public async virtual UniTask Exit(TData data) { }
+        public async virtual UniTask ExitAsync(TData data) { }
 
         public async virtual UniTask Rollback(TData source) { }
         
         protected override void OnActivate()
         {
             base.OnActivate();
-            _asyncStateProxyValue?.Exit();
+            _asyncStateProxyValue?.ExitAsync();
             
-            LifeTime.AddCleanUpAction(() => _asyncStateProxyValue.Exit());
+            LifeTime.AddCleanUpAction(() => _asyncStateProxyValue.ExitAsync());
             _asyncStateProxyValue = _asyncStateProxyValue ?? new AsyncStateProxyValue<TData, TValue>(this,this,this);
         }
 
