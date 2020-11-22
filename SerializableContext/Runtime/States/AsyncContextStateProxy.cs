@@ -9,7 +9,7 @@
     {
 
         public AsyncContextStateProxy(
-            IAsyncCommand<IContext, AsyncStatus> command = null,
+            IAsyncStateCommand<IContext, AsyncStatus> command = null,
             IAsyncCompletion<AsyncStatus, IContext> onComplete = null,
             IAsyncEndPoint<IContext> endPoint = null,
             IAsyncRollback<IContext> onRollback = null) : base(command, onComplete, endPoint, onRollback)
@@ -18,4 +18,5 @@
 
         protected sealed override AsyncStatus GetInitialExecutionValue() => AsyncStatus.Pending;
     }
+
 }
