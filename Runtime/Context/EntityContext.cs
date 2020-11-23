@@ -60,17 +60,13 @@
 
         #region public methods
 
-        public bool Contains<TData>() {
-            return data.Contains<TData>();
-        }
+        public bool Contains<TData>() => data.Contains<TData>();
 
-        public virtual TData Get<TData>() {
-            return data.Get<TData>();
-        }
+        public virtual TData Get<TData>() => data.Get<TData>();
 
-        public bool Remove<TData>() {
-            return data.Remove<TData>();
-        }
+        public bool Remove<TData>() =>  data.Remove<TData>();
+
+        public void RemoveSilent<TData>() => data.RemoveSilent<TData>();
 
         public void Release() {
             data.Release();

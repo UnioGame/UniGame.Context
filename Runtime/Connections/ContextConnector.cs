@@ -105,7 +105,7 @@
                 return;
             }
 
-            _cachedContext.Remove<T>();
+            _cachedContext.RemoveSilent<T>();
         }
         
         protected override void OnBind(IContext connection) {

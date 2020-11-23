@@ -59,6 +59,41 @@
         }
         
         [Test]
+        public void ConnectorDisconnectTest() {
+            
+            //info
+            var connector   = new ContextConnector();
+            var context1    = new EntityContext();
+            var context2    = new EntityContext();
+            var startValue  = 10;
+            var secondValue = 20;
+
+            var resultValue  = 0;
+            
+            //action
+            var disposable = connector.Receive<int>().
+                Skip(1).
+                Subscribe(x => resultValue = x);
+            
+            context1.Publish(startValue);
+            
+            connector.Bind(context1);
+            connector.Bind(context2);
+            
+            var result1 = connector.Context.Get<int>();
+            Assert.That(result1 == startValue);
+            
+            connector.Disconnect(context1);
+            context2.Publish(secondValue);
+
+            var result2 = connector.Context.Get<int>();
+            disposable.Dispose();
+            
+            Assert.That(secondValue == result2);
+            Assert.That(secondValue == resultValue);
+        }
+        
+        [Test]
         public void ContextConnectorDisconnectMethodTest() {
             
             //info
