@@ -14,26 +14,26 @@ namespace UniModules.UniGame.Context.Runtime.Context
     public static class ContextExtensions
     {
 
-        public static IContextConnector Merge(this IContext context, IContext targetContext)
+        public static IContextConnection Merge(this IContext context, IContext targetContext)
         {
-            if (context is IContextConnector connector)
+            if (context is IContextConnection connector)
                 return connector.Merge(targetContext);
                     
-            connector = new ContextConnector();
+            connector = new ContextConnection();
             connector.Bind(targetContext);
             connector.Bind(context);
             return connector;
         }
         
-        public static IContextConnector Merge(this IContextConnector context, IContext targetContext)
+        public static IContextConnection Merge(this IContextConnection context, IContext targetContext)
         {
             context.Bind(targetContext);
             return context;
         }
         
-        public static IContextConnector Merge(this IContext source,params IContext[] targetContext)
+        public static IContextConnection Merge(this IContext source,params IContext[] targetContext)
         {
-            var connector = new ContextConnector();
+            var connector = new ContextConnection();
             foreach (var context in targetContext)
             {
                 connector.Bind(context);

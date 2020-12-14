@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Connections;
     using Core.Runtime.DataFlow;
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.Interfaces;
@@ -13,14 +12,17 @@
     using UniRx;
 
     [Serializable]
-    public class EntityContext : IContext
+    public class EntityContext : 
+        IManagedBinder<IMessagePublisher>,
+        IDisposableContext
     {
         private TypeData           data;
         private LifeTimeDefinition lifeTimeDefinition;
         private TypeDataBrodcaster broadcaster;
         private int                id;
 
-        public EntityContext() {
+        public EntityContext() 
+        {
             //context data container
             data = new TypeData();
             //context lifetime
@@ -32,14 +34,14 @@
 
         #region connection api
 
-        public int ConnectionsCount => broadcaster.ConnectionsCount;
+        public int BindingsCount => broadcaster.Count;
 
-        public void Disconnect(IMessagePublisher connection) {
-            broadcaster.Disconnect(connection);
+        public void Break(IMessagePublisher connection) {
+            broadcaster.Remove(connection);
         }
 
         public IDisposable Bind(IMessagePublisher connection) {
-            if(connection == this)
+            if(ReferenceEquals(connection, this))
                 return Disposable.Empty;
             
             var disposable = broadcaster.Bind(connection);

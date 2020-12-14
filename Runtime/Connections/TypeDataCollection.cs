@@ -12,15 +12,14 @@ namespace UniModules.UniGame.Context.Runtime.Connections
     using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
-    public class TypeDataConnector<TConnection> : 
-        ITypeDataConnector<TConnection> ,
+    public class TypeDataCollection<TData> : 
         ILifeTimeContext,
         IPoolable
     {
-        protected ReactiveCollection<TConnection> _registeredItems = new ReactiveCollection<TConnection>();
+        protected ReactiveCollection<TData> _registeredItems = new ReactiveCollection<TData>();
         protected LifeTimeDefinition _lifeTime = new LifeTimeDefinition();
 
-        public int ConnectionsCount => _registeredItems.Count;
+        public int Count => _registeredItems.Count;
         
         public ILifeTime LifeTime => _lifeTime;
         
@@ -37,7 +36,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IDisposable Bind(TConnection connection)
+        public IDisposable Add(TData connection)
         {
             if (_registeredItems.Contains(connection))
                 return Disposable.Empty;
@@ -45,19 +44,19 @@ namespace UniModules.UniGame.Context.Runtime.Connections
             _registeredItems.Add(connection);
             
             var disposable = ClassPool.Spawn<DisposableAction>();
-            disposable.Initialize(() => Disconnect(connection));
+            disposable.Initialize(() => Remove(connection));
             
             OnBind(connection);
             
             return disposable.AddTo(LifeTime);
         }
 
-        public void Disconnect(TConnection connection)
+        public void Remove(TData connection)
         {
             _registeredItems.Remove(connection);
         }
 
-        protected virtual void OnBind(TConnection connection) { }
+        protected virtual void OnBind(TData connection) { }
 
         protected virtual void OnRelease()
         {
