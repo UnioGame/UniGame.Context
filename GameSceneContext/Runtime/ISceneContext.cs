@@ -2,7 +2,7 @@
     using Core.Runtime.Interfaces;
     using UniRx;
 
-    public interface IReadOnlySceneContext : IReadOnlyContext
+    public interface IReadOnlySceneContext : IMessageContext
     {
         int                             Handle { get; }
 
@@ -15,6 +15,7 @@
 
     public interface ISceneContext : 
         IReadOnlySceneContext, 
+        IManagedBinder<IMessagePublisher>,
         IContext {
         
         

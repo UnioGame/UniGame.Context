@@ -4,12 +4,13 @@
     using Core.Runtime.Interfaces;
     using UniRx;
 
-    public interface IContextConnector : 
-        ITypeDataConnector<IContext>,
-        IMessageContext,
+    public interface IContextConnection : 
+        IConnection<IContext>,
+        IContext,
         IDisposable
     {
-        IContext                        Context { get; }
         IReadOnlyReactiveProperty<bool> IsEmpty { get; }
+
+        void Disconnect(IContext connection);
     }
 }

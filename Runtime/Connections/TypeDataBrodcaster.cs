@@ -1,15 +1,20 @@
 ﻿
 namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
 {
+    using System;
     using System.Runtime.CompilerServices;
     using UniModules.UniGame.Context.Runtime.Connections;
+    using UniModules.UniGame.Core.Runtime.Interfaces;
     using UniRx;
     
     public class TypeDataBrodcaster : 
-        TypeDataConnector<IMessagePublisher>,
+        TypeDataCollection<IMessagePublisher>,
+        IManagedBinder<IMessagePublisher> ,
         IMessagePublisher
     {
 
+        public int BindingsCount => Count;
+        
         #region IContextData interface
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -23,6 +28,9 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
 
         #endregion
 
+        public IDisposable Bind(IMessagePublisher connection) => Add(connection);
+
+        public void Break(IMessagePublisher connection) => Remove(connection);
     }
     
 }

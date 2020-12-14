@@ -24,7 +24,7 @@
             UpdateSceneStatus();
         }
 
-        public int ConnectionsCount => _context.ConnectionsCount;
+        public int BindingsCount => _context.BindingsCount;
 
         public int Handle => _handle;
 
@@ -69,8 +69,8 @@
 
         public IDisposable Bind(IMessagePublisher connection) => _context.Bind(connection);
 
-        public void Disconnect(IMessagePublisher connection) {
-            _context.Disconnect(connection);
+        public void Break(IMessagePublisher connection) {
+            _context.Break(connection);
         }
 
         #region context api

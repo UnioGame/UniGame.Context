@@ -14,7 +14,7 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
     
     public class TypeDataReceiver : 
         IPoolable, 
-        IConnector<IMessagePublisher>,
+        IBinder<IMessagePublisher>,
         IMessagePublisher
     {
         private List<IMessagePublisher> _registeredItems = new List<IMessagePublisher>();

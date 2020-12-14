@@ -7,8 +7,8 @@
     using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
-    public class UniqueConnector<TData> : 
-        TypeDataConnector<IObservable<TData>> 
+    public class UniqueCollection<TData> : 
+        TypeDataCollection<IObservable<TData>> 
     {
 
     }

@@ -103,8 +103,7 @@
             
             return scene.isLoaded ? 
                 Observable.Return(scenesContext.Get(scene.handle)).
-                    Concat(filter) : 
-                filter;
+                    Concat(filter) : filter;
         }
 
         public static IObservable<IReadOnlySceneContext> NotifyOnSceneContext(int handle,SceneStatus status) {

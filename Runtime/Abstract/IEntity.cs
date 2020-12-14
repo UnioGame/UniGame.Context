@@ -2,7 +2,7 @@
 {
     using UniGame.Core.Runtime.Interfaces;
 
-    public interface IEntity : IContext
+    public interface IEntity : IDisposableContext
     {
         int Id { get; }
     }

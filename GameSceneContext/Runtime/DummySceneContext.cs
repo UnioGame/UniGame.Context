@@ -52,9 +52,9 @@
 
         public IDisposable Bind(IMessagePublisher connection) => Disposable.Empty;
 
-        public int ConnectionsCount => 0;
+        public int BindingsCount => 0;
 
-        public void Disconnect(IMessagePublisher connection) {
+        public void Break(IMessagePublisher connection) {
             
         }
     }
