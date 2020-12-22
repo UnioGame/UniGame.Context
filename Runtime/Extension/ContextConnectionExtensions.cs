@@ -8,7 +8,7 @@
         public static IContextConnection ToConnector(this IContext context)
         {
             var connector = new ContextConnection();
-            connector.Bind(context);
+            connector.Broadcast(context);
             return connector;
         }
         

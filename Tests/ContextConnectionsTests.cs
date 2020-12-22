@@ -1,4 +1,5 @@
-﻿namespace UniModules.UniGame.Context.Tests {
+﻿namespace UniModules.UniGame.Context.Tests 
+{
     using Core.Runtime.Rx;
     using NUnit.Framework;
     using Runtime.Connections;
@@ -7,7 +8,6 @@
 
     public class ContextConnectionsTests 
     {
-
         [Test]
         public void ContextBindPublishTest()
         {
@@ -20,8 +20,8 @@
             
             //action
             source1.Publish(source);
-            source1.Bind(source2);
-            source2.Bind(source3);
+            source1.Broadcast(source2);
+            source2.Broadcast(source3);
             
             source1.Publish(result);
             
@@ -30,8 +30,8 @@
         }
 
         [Test]
-        public void ContextConnectorDisconnectTest() {
-            
+        public void ContextConnectorDisconnectTest() 
+        {
             //info
             var connector   = new ContextConnection();
             var context1    = new EntityContext();
@@ -43,8 +43,8 @@
             //action
             context1.Publish(startValue);
             
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
             
@@ -52,15 +52,15 @@
             
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
             
-            connector.Remove(context1);
-            connector.Bind(context1);
+            connector.Disconnect(context1);
+            connector.Connect(context1);
 
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
         }
         
         [Test]
-        public void ConnectorDisconnectTest() {
-            
+        public void ConnectorDisconnectTest() 
+        {
             //info
             var connector   = new ContextConnection();
             var context1    = new EntityContext();
@@ -77,25 +77,20 @@
             
             context1.Publish(startValue);
             
-            connector.Bind(context1);
-            connector.Bind(context2);
-            
-            var result1 = connector.Context.Get<int>();
-            Assert.That(result1 == startValue);
-            
-            connector.Remove(context1);
-            context2.Publish(secondValue);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
-            var result2 = connector.Context.Get<int>();
+            connector.Disconnect(context1);
+            context2.Publish(secondValue);
+            
             disposable.Dispose();
             
-            Assert.That(secondValue == result2);
             Assert.That(secondValue == resultValue);
         }
         
         [Test]
-        public void ContextConnectorDisconnectMethodTest() {
-            
+        public void ContextConnectorDisconnectMethodTest() 
+        {
             //info
             var connector        = new ContextConnection();
             var context1         = new EntityContext();
@@ -103,33 +98,28 @@
             var startValue       = 10;
             var secondValue      = 20;
             var lastValue        = 30;
-            var connectorContext = connector.Context;
+            
             //action
             context1.Publish(startValue);
             
-            var disposable1 = connector.Bind(context1);
-            var disposable2 = connector.Bind(context2);
+            var disposable1 = connector.Connect(context1);
+            var disposable2 = connector.Connect(context2);
 
-            
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
-            Assert.That(connectorContext.Get<int>() == startValue);
-            
+
             context2.Publish(20);
             
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
-            Assert.That(connectorContext.Get<int>() == secondValue);
-            
+
             disposable1.Dispose();
-            connector.Bind(context1);
+            connector.Connect(context1);
 
             connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
-            Assert.That(connectorContext.Get<int>() == startValue);
         }
 
-        
         [Test]
-        public void ContextConnectorValueTest() {
-            
+        public void ContextConnectorValueTest()
+        {
             //info
             var connector = new ContextConnection();
             var context1 = new EntityContext();
@@ -137,8 +127,8 @@
             
             //action
 
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             context1.Publish(10);
             context2.Publish(20);
@@ -148,8 +138,8 @@
         }
         
         [Test]
-        public void ContextReceiveTest() {
-            
+        public void ContextReceiveTest() 
+        {
             //info
             var context1  = new EntityContext();
             var testValue = 100;
@@ -165,8 +155,8 @@
         }
         
         [Test]
-        public void ContextReceiveFirstTest() {
-            
+        public void ContextReceiveFirstTest() 
+        {
             //info
             var context1       = new EntityContext();
             var textValueFirst = 200;
@@ -185,8 +175,8 @@
         }
         
         [Test]
-        public void ContextConnectorRelease() {
-            
+        public void ContextConnectorRelease() 
+        {
             //info
             var connector = new ContextConnection();
             var context1  = new EntityContext();
@@ -194,8 +184,8 @@
             
             //action
 
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             context1.Publish(10);
             context2.Publish(20);
@@ -209,8 +199,8 @@
         }
         
         [Test]
-        public void ContextConnectorContextRelease() {
-            
+        public void ContextConnectorContextRelease() 
+        {
             //info
             var connector = new ContextConnection();
             var context1  = new EntityContext();
@@ -218,8 +208,8 @@
             
             //action
 
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             context1.Publish(10);
             context2.Publish(20);
@@ -233,8 +223,8 @@
         }
         
         [Test]
-        public void ContextConnectorPublishAndReleaseBeforeConnect() {
-            
+        public void ContextConnectorPublishAndReleaseBeforeConnect() 
+        {
             //info
             var connector = new ContextConnection();
             var context1  = new EntityContext();
@@ -245,8 +235,8 @@
             context1.Publish(10);
             context2.Publish(20);
             
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
             
             context2.Release();
             
@@ -258,8 +248,8 @@
         }
         
         [Test]
-        public void ContextConnectorPublishBeforeConnect() {
-            
+        public void ContextConnectorPublishBeforeConnect() 
+        {
             //info
             var connector = new ContextConnection();
             var context1  = new EntityContext();
@@ -270,8 +260,8 @@
             context1.Publish(10);
             context2.Publish(20);
             
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             //check
             connector.Receive<int>().
@@ -281,8 +271,8 @@
         }
         
         [Test]
-        public void ContextConnectorValueAfterRelease() {
-            
+        public void ContextConnectorValueAfterRelease() 
+        {
             //info
             var connector = new ContextConnection();
             var context1  = new EntityContext();
@@ -292,8 +282,8 @@
             context1.Publish(10);
             context2.Publish(20);
             
-            connector.Bind(context1);
-            connector.Bind(context2);
+            connector.Connect(context1);
+            connector.Connect(context2);
 
             //check
             var disposable = connector.
@@ -321,6 +311,5 @@
             value.Value = 0;
             Assert.True(true);
         }
-        
     }
 }

@@ -20,14 +20,14 @@ namespace UniModules.UniGame.Context.Runtime.Context
                 return connector.Merge(targetContext);
                     
             connector = new ContextConnection();
-            connector.Bind(targetContext);
-            connector.Bind(context);
+            connector.Broadcast(targetContext);
+            connector.Broadcast(context);
             return connector;
         }
         
         public static IContextConnection Merge(this IContextConnection context, IContext targetContext)
         {
-            context.Bind(targetContext);
+            context.Broadcast(targetContext);
             return context;
         }
         
@@ -36,9 +36,9 @@ namespace UniModules.UniGame.Context.Runtime.Context
             var connector = new ContextConnection();
             foreach (var context in targetContext)
             {
-                connector.Bind(context);
+                connector.Broadcast(context);
             }
-            connector.Bind(source);
+            connector.Broadcast(source);
             return connector;
         }
         

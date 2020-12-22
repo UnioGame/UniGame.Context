@@ -67,7 +67,7 @@
         #endregion
 
 
-        public IDisposable Bind(IMessagePublisher connection) => _context.Bind(connection);
+        public IDisposable Broadcast(IMessagePublisher connection) => _context.Broadcast(connection);
 
         public void Break(IMessagePublisher connection) {
             _context.Break(connection);

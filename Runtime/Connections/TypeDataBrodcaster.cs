@@ -9,7 +9,7 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
     
     public class TypeDataBrodcaster : 
         TypeDataCollection<IMessagePublisher>,
-        IManagedBinder<IMessagePublisher> ,
+        IManagedBroadcaster<IMessagePublisher> ,
         IMessagePublisher
     {
 
@@ -28,7 +28,7 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
 
         #endregion
 
-        public IDisposable Bind(IMessagePublisher connection) => Add(connection);
+        public IDisposable Broadcast(IMessagePublisher connection) => Add(connection);
 
         public void Break(IMessagePublisher connection) => Remove(connection);
     }

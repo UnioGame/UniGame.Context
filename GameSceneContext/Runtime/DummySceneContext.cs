@@ -50,7 +50,7 @@
 
         public string Name => string.Empty;
 
-        public IDisposable Bind(IMessagePublisher connection) => Disposable.Empty;
+        public IDisposable Broadcast(IMessagePublisher connection) => Disposable.Empty;
 
         public int BindingsCount => 0;
 

@@ -15,7 +15,7 @@
 
     public interface ISceneContext : 
         IReadOnlySceneContext, 
-        IManagedBinder<IMessagePublisher>,
+        IManagedBroadcaster<IMessagePublisher>,
         IContext {
         
         

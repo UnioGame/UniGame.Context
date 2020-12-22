@@ -14,7 +14,7 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
     
     public class TypeDataReceiver : 
         IPoolable, 
-        IBinder<IMessagePublisher>,
+        IBroadcaster<IMessagePublisher>,
         IMessagePublisher
     {
         private List<IMessagePublisher> _registeredItems = new List<IMessagePublisher>();
@@ -48,7 +48,7 @@ namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IDisposable Bind(IMessagePublisher connection)
+        public IDisposable Broadcast(IMessagePublisher connection)
         {
             if (!_registeredItems.Contains(connection))
                 _registeredItems.Add(connection);

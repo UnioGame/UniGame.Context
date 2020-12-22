@@ -13,7 +13,7 @@
 
     [Serializable]
     public class EntityContext : 
-        IManagedBinder<IMessagePublisher>,
+        IManagedBroadcaster<IMessagePublisher>,
         IDisposableContext
     {
         private TypeData           data;
@@ -40,11 +40,11 @@
             broadcaster.Remove(connection);
         }
 
-        public IDisposable Bind(IMessagePublisher connection) {
+        public IDisposable Broadcast(IMessagePublisher connection) {
             if(ReferenceEquals(connection, this))
                 return Disposable.Empty;
             
-            var disposable = broadcaster.Bind(connection);
+            var disposable = broadcaster.Broadcast(connection);
             return disposable;
         }
 

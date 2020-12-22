@@ -140,7 +140,7 @@
             //Create new scene context 
             var sceneContext                     = new SceneContext(sceneHandle);
             //connect context data with common channel
-            sceneContext.Bind(_messageBroker).AddTo(sceneContext.LifeTime);
+            sceneContext.Broadcast(_messageBroker).AddTo(sceneContext.LifeTime);
 
             _sceneContexts[sceneHandle] = sceneContext;
 

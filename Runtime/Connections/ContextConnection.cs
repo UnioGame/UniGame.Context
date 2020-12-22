@@ -4,7 +4,6 @@
     using Context;
     using Core.Runtime.Interfaces;
     using Core.Runtime.Rx;
-    using Extension;
     using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
@@ -13,34 +12,27 @@
         IContextConnection,
         IResetable
     {
-        private EntityContext                 _cachedContext = new EntityContext();
-        private RecycleReactiveProperty<bool> _isEmpty       = new RecycleReactiveProperty<bool>(true);
+        private readonly EntityContext                 _cachedContext = new EntityContext();
+        private readonly RecycleReactiveProperty<bool> _isEmpty       = new RecycleReactiveProperty<bool>(true);
 
         public ContextConnection() => Reset();
 
         #region properties
 
+        public int BindingsCount => Count;
 
-        public int      BindingsCount => Count;
-        
-        public IContext Context       => _cachedContext;
-        
-
-        public IReadOnlyReactiveProperty<bool> IsEmpty       => _isEmpty;
+        public IReadOnlyReactiveProperty<bool> IsEmpty => _isEmpty;
 
         public bool HasValue => _cachedContext.HasValue;
 
         #endregion
-        
-        
-        public IDisposable Bind(IMessagePublisher connection) => _cachedContext.Bind(connection);
+
+        public IDisposable Broadcast(IMessagePublisher connection) => _cachedContext.Broadcast(connection);
 
         public void Break(IMessagePublisher connection) => _cachedContext.Break(connection);
-        
 
         public void Disconnect(IContext connection) => base.Remove(connection);
 
-        
         public IDisposable Connect(IContext source) => Add(source);
 
         public bool Remove<TData>() => _cachedContext.Remove<TData>();
@@ -106,11 +98,11 @@
 
             _registeredItems
                 .ObserveRemove()
-                .Where(x => x.Value == context)
+                .Where(x => Equals(x.Value, context))
                 .Subscribe(x => UpdateValue<T>())
                 .AddTo(_lifeTime);
 
-            context.Bind(_cachedContext)
+            context.Broadcast(_cachedContext)
                 .AddTo(_lifeTime);
         }
 
@@ -141,6 +133,5 @@
         {
             _cachedContext.Release();
         }
-
     }
 }
