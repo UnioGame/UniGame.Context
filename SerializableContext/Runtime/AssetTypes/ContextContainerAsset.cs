@@ -12,7 +12,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/Assets/ContextContainerAsset", fileName = nameof(ContextContainerAsset))]
     public class ContextContainerAsset :
-        TypeContainerAssetSource<EntityContext, IContext>
+        TypeContainerAssetSource<IContext>
     {
         [SerializeField] private bool _createDefaultOnLoad = false;
 
