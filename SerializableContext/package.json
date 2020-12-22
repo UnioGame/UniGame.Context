@@ -4,7 +4,7 @@
   "displayName": "UniGame Serializable Context",
   "description": "Shared serializable context data for Unity",
   "unity": "2019.2",
-  "version": "2020.0.43",
+  "version": "2020.0.44",
   "keywords": [],
   "dependencies": {
     "com.unigame.unicore": "2020.2.0",
