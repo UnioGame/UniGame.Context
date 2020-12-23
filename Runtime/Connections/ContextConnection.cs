@@ -1,4 +1,6 @@
-﻿namespace UniModules.UniGame.Context.Runtime.Connections
+﻿using System.Linq;
+
+namespace UniModules.UniGame.Context.Runtime.Connections
 {
     using System;
     using Context;
@@ -12,8 +14,8 @@
         IContextConnection,
         IResetable
     {
-        private readonly EntityContext                 _cachedContext = new EntityContext();
-        private readonly RecycleReactiveProperty<bool> _isEmpty       = new RecycleReactiveProperty<bool>(true);
+        private readonly EntityContext _cachedContext = new EntityContext();
+        private readonly RecycleReactiveProperty<bool> _isEmpty = new RecycleReactiveProperty<bool>(true);
 
         public ContextConnection() => Reset();
 
@@ -37,9 +39,21 @@
 
         public bool Remove<TData>() => _cachedContext.Remove<TData>();
 
-        public TData Get<TData>() => _cachedContext.Get<TData>();
+        public TData Get<TData>()
+        {
+            var result = _cachedContext.Get<TData>();
+            foreach (var c in _registeredItems)
+            {
+                if (result != null) break;
+                result = c.Get<TData>();
+            }
+            return result;
+        }
 
-        public bool Contains<TData>() => _cachedContext.Contains<TData>();
+        public bool Contains<TData>()
+        {
+            return _cachedContext.Contains<TData>() || _registeredItems.Any(c => c.Contains<TData>());
+        }
 
         public void Reset()
         {
