@@ -16,6 +16,8 @@
     {
         [SerializeField] 
         private TObject _prefab;
+        [SerializeField]
+        private bool _dontDestroy = false;
 
         private static TObject _instance;
 
@@ -27,6 +29,10 @@
             {
                 var go = GameObject.Instantiate(_prefab.gameObject);
                 _instance = go.GetComponent<TObject>();
+                if (_dontDestroy)
+                {
+                    DontDestroyOnLoad(_instance);
+                }
             }
 
             var instanceAsset = await OnInstanceReceive(_instance,context);
@@ -41,8 +47,5 @@
         {
             return asset;
         }
-
-
-
     }
 }
