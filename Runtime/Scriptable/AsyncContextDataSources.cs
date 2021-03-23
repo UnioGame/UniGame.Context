@@ -5,7 +5,9 @@
     using Cysharp.Threading.Tasks;
     using UniCore.Runtime.ObjectPool.Runtime;
     using UniCore.Runtime.ObjectPool.Runtime.Extensions;
+    using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniGame.Context.Runtime.Abstract;
+    using UniRx;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AsyncSources", fileName = nameof(AsyncContextDataSources))]
@@ -14,6 +16,12 @@
     {
         [SerializeReference]
         public List<AsyncContextDataSource> sources = new List<AsyncContextDataSource>();
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            OnReset();
+        }
 
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
@@ -30,5 +38,13 @@
             return context;
         }
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            foreach (var source in sources)
+            {
+                source.AddTo(LifeTime);
+            }
+        }
     }
 }

@@ -2,10 +2,10 @@
 {
     using System;
     using AssetTypes;
-    using UniModules.UniGame.AddressableTools.Runtime.AssetReferencies;
+    using UnityEngine.AddressableAssets;
 
     [Serializable]   
-    public class AssetReferenceContextContainer : DisposableAssetReference<ContextContainerAsset>
+    public class AssetReferenceContextContainer : AssetReferenceT<ContextContainerAsset>
     {
         public AssetReferenceContextContainer(string guid) : base(guid) {}
     }

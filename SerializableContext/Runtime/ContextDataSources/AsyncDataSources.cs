@@ -5,8 +5,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
     using System.Collections.Generic;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
+    using Core.Runtime.ScriptableObjects;
     using Cysharp.Threading.Tasks;
     using UniCore.Runtime.ProfilerTools;
+    using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniContextData.Runtime.Interfaces;
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UniModules.UniGame.SerializableContext.Runtime.Addressables;
@@ -58,16 +60,15 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                 GameLog.LogError($"Empty Data source found {sourceReference} GUID {sourceReference.AssetGUID}");
                 return false;
             }
+
+            if (source is LifetimeScriptableObject ltSO)
+            {
+                ltSO.AddTo(LifeTime);
+            }
+
             await source.RegisterAsync(target);
             return true;
 
-        }
-
-        protected override void OnReset()
-        {
-            foreach (var reference in sourceAssets) {
-                LifeTime.AddDispose(reference);
-            }
         }
 
         protected void OnDestroy()
