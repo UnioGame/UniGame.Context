@@ -1,5 +1,6 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Runtime.Components
 {
+    using System;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
@@ -41,8 +42,19 @@
 
             return context;
         }
-        
-        
+
+        protected override void OnReset()
+        {
+            base.OnReset();
+            if (_instance != null && _instance.gameObject != null)
+            {
+                (_instance as IDisposable)?.Dispose();
+                GameObject.Destroy(_instance.gameObject);
+            }
+            _instance = null;
+
+        }
+
         protected virtual async UniTask<TApi> OnInstanceReceive(TObject asset,IContext context)
         {
             return asset;

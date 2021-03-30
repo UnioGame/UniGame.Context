@@ -9,8 +9,8 @@
     using UnityEngine;
 
     [Serializable]
-    public abstract class TypeValueAssetSource<TValue,TApiValue> : 
-        DisposableScriptableObject,
+    public abstract class TypeValueAssetSource<TValue,TApiValue> :
+        LifetimeScriptableObject,
         ITypeValueAsset<TValue,TApiValue>
         where TValue : TApiValue
     {

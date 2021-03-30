@@ -34,9 +34,7 @@
 
         public IDisposable Subscribe(IObserver<TApi> observer) =>
             _value.Subscribe(api => observer.OnNext(api), observer.OnError, observer.OnCompleted);
-
-        public void Dispose() => Reset();
-
+        
         public void SetValue(TValue value) => _value.Value = value;
       
         #region private methods
