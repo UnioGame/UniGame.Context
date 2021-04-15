@@ -4,15 +4,15 @@
   "displayName": "UniGame Serializable Context",
   "description": "Shared serializable context data for Unity",
   "unity": "2019.2",
-  "version": "2020.0.71",
+  "version": "2020.0.72",
   "keywords": [],
   "dependencies": {
-    "com.unigame.unicore": "2021.0.1",
+    "com.unigame.unicore": "2021.0.3",
     "com.unity.addressables": "1.16.1",
     "com.unigame.neuecc.unirx": "7.1.1",
     "com.unigame.neuecc.unitask": "2.2.3",
     "com.unity.textmeshpro": "2.0.1",
-    "com.unigame.contextdata": "2021.0.7",
-    "com.unigame.addressablestools": "2021.0.5"
+    "com.unigame.contextdata": "2021.0.8",
+    "com.unigame.addressablestools": "2021.0.6"
   }
 }
