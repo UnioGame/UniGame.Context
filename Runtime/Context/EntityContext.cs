@@ -83,7 +83,8 @@
 
         #region rx
 
-        public void Publish<T>(T message) {
+        public void Publish<T>(T message)
+        {
             data.Publish(message);
             broadcaster.Publish(message);
         }
