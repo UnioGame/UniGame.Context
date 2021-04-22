@@ -4,7 +4,7 @@
   "displayName": "UniGame Context Data",
   "description": "",
   "unity": "2019.2",
-  "version": "2021.0.15",
+  "version": "2021.0.16",
   "keywords": [
     "context",
     "rx"
@@ -15,7 +15,7 @@
     "com.unigame.unicore": "2021.0.7",
     "com.unity.addressables": "1.17.15",
     "com.unity.textmeshpro": "2.1.1",
-    "com.unigame.addressablestools": "2021.0.13",
-    "com.unigame.uitoolkit": "2020.1.36"
+    "com.unigame.addressablestools": "2021.0.14",
+    "com.unigame.uitoolkit": "2020.1.37"
   }
 }
