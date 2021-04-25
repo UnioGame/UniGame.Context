@@ -1,4 +1,6 @@
-﻿namespace UniModules.UniGame.Context.Tests 
+﻿using UniModules.UniGame.Core.Runtime.Interfaces;
+
+namespace UniModules.UniGame.Context.Tests 
 {
     using Core.Runtime.Rx;
     using NUnit.Framework;

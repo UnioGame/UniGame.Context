@@ -25,6 +25,7 @@
         {
             //context data container
             data = new TypeData();
+            
             //context lifetime
             lifeTimeDefinition = new LifeTimeDefinition();
             broadcaster        = new TypeDataBrodcaster();
@@ -85,6 +86,8 @@
 
         public void Publish<T>(T message)
         {
+            CheckLifeTimeValue(message);
+            
             data.Publish(message);
             broadcaster.Publish(message);
         }
@@ -97,6 +100,27 @@
 
         #endregion
 
+        #region private methods
+
+
+        private void CheckLifeTimeValue<T>(T value)
+        {
+            var lifeTime = value.GetLifeTime();
+            
+            if (lifeTime.IsTerminatedLifeTime())
+                return;
+            
+            lifeTime.AddCleanUpAction(() =>
+            {
+                var valueData = Get<T>();
+                if (ReferenceEquals(valueData,value))
+                    Remove<T>();
+            });
+        }
+        
+        #endregion
+        
+        
         #region Unity Editor Api
 
 #if UNITY_EDITOR
