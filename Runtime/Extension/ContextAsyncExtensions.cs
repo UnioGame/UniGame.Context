@@ -1,3 +1,7 @@
+using System;
+using UniModules.UniCore.Runtime.Extension;
+using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Rx;
+
 namespace UniModules.UniGame.CoreModules.UniGame.Context.Runtime.Extension
 {
     using Cysharp.Threading.Tasks;
@@ -17,5 +21,18 @@ namespace UniModules.UniGame.CoreModules.UniGame.Context.Runtime.Extension
             if(context == null) return default;
             return await context.Receive<TValue>().AwaitFirstAsync(lifeTime);
         }
+        
+        public static async UniTask<TValue> ReceiveFirstAsync<TValue>(this IReadOnlyContext context,IObservable<TValue> observable)
+        {
+            if(context == null) return default;
+            return await observable.AwaitFirstAsync(context.LifeTime);
+        }
+        
+        public static async UniTask<TValue> ReceiveFirstAsync<TValue>(this ILifeTime lifeTime,IObservable<TValue> observable)
+        {
+            if(lifeTime == null) return default;
+            return await observable.AwaitFirstAsync(lifeTime);
+        }
+        
     }
 }
