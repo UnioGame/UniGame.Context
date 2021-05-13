@@ -4,7 +4,7 @@
   "displayName": "UniGame Context Data",
   "description": "",
   "unity": "2019.2",
-  "version": "2021.0.36",
+  "version": "2021.0.41",
   "keywords": [
     "context",
     "rx"
@@ -12,10 +12,10 @@
   "dependencies": {
     "com.unigame.neuecc.unirx": "7.1.1",
     "com.unigame.neuecc.unitask": "2.2.5",
-    "com.unigame.unicore": "2021.0.19",
+    "com.unigame.unicore": "2021.0.23",
     "com.unity.addressables": "1.17.17",
     "com.unity.textmeshpro": "2.1.1",
-    "com.unigame.addressablestools": "2021.0.29",
-    "com.unigame.uitoolkit": "2020.1.51"
+    "com.unigame.addressablestools": "2021.0.33",
+    "com.unigame.uitoolkit": "2020.1.56"
   }
 }
