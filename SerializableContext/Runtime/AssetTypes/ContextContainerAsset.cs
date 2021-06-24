@@ -1,4 +1,6 @@
 ﻿using UniCore.Runtime.ProfilerTools;
+using UniModules.UniCore.Runtime.Common;
+using UniModules.UniCore.Runtime.ObjectPool.Runtime;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
@@ -16,6 +18,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
     {
         [SerializeField] private bool _createDefaultOnLoad = false;
 
+        private DisposableAction _disposableAction;
+        
         protected override void OnActivate()
         {
             base.OnActivate();
@@ -33,12 +37,21 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
             if (context == null)
                 return;
 
-            context.LifeTime.AddCleanUpAction(() => SetValue(null));
-
-            context.LifeTime.AddCleanUpAction(
-                () => GameLog.Log($"CONTEXT CONTAINER{name} CONTEXT FINISHED", Color.red));
+            _disposableAction?.Complete();
+            _disposableAction = ClassPool.Spawn<DisposableAction>();
+            _disposableAction.Initialize(() => SetValue(null));
+            
+            context.LifeTime.AddDispose(_disposableAction);
+            context.LifeTime.AddCleanUpAction(() => GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT FINISHED", Color.red));
 
             GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT VALUE UPDATE {context}", Color.red);
+        }
+
+        protected override void ResetValue()
+        {
+            base.ResetValue();
+            _disposableAction?.Complete();
+            SetValue(null);
         }
     }
 }
