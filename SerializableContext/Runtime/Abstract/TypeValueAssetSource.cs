@@ -1,11 +1,12 @@
-﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
+﻿using UniModules.UniGame.SerializableContext.Runtime.Abstract;
+
+namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
     using System;
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.ScriptableObjects;
     using global::UniCore.Runtime.ProfilerTools;
     using UniCore.Runtime.Common;
-    using UniGame.SerializableContext.Runtime.Abstract;
     using UnityEngine;
 
     [Serializable]
