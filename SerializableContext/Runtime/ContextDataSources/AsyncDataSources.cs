@@ -34,10 +34,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
             foreach (var source in sources) {
-                var asyncSource = source as IAsyncContextDataSource;
-                if(asyncSource == null) 
+                if(!(source is IAsyncContextDataSource asyncSource)) 
                     continue;
-                asyncSource.RegisterAsync(context);
+                asyncSource.RegisterAsync(context)
+                    .Forget();
             }
             
             await UniTask.WhenAll(sourceAssets.Select(x => RegisterContexts(context, x)));
