@@ -5,7 +5,7 @@
     using Core.Runtime.DataFlow;
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.Interfaces;
-    using global::UniGame.UniNodes.NodeSystem.Runtime.Connections;
+    using global::UniModules.GameFlow.Runtime.Connections;
     using UniCore.Runtime.Common;
     using UniCore.Runtime.DataFlow;
     using UniCore.Runtime.ObjectPool.Runtime.Extensions;

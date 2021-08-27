@@ -1,5 +1,5 @@
 ﻿
-namespace UniGame.UniNodes.NodeSystem.Runtime.Connections
+namespace UniModules.GameFlow.Runtime.Connections
 {
     using System;
     using System.Runtime.CompilerServices;
