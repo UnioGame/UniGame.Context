@@ -12,19 +12,16 @@
     {
         private IAddressableSpriteAtlasHandler _addressableSpriteAtlasHandler;
         
-        public AddressablesAtlasesService(IAddressableSpriteAtlasHandler spriteAtlasManager)
+        public AddressablesAtlasesService(IAddressableSpriteAtlasHandler atlasHandler)
         {
-            _addressableSpriteAtlasHandler = spriteAtlasManager;
-            _addressableSpriteAtlasHandler.
-                Execute().
-                AddTo(LifeTime);
-
+            _addressableSpriteAtlasHandler = atlasHandler;
             Observable.FromEvent(
                 x => SceneManager.activeSceneChanged += OnSceneChanged,
                 x => SceneManager.activeSceneChanged -= OnSceneChanged).
                 Subscribe().
                 AddTo(LifeTime);
-
+            
+            Complete();
         }
         
         public async UniTask<bool> RequestSpriteAtlas(string guid)

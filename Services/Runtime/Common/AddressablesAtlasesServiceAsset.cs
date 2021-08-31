@@ -1,6 +1,5 @@
 ﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
 {
-    using UniModules.UniGame.AddressableTools.Runtime.Attributes;
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
@@ -9,16 +8,19 @@
     using UniGame.AddressableTools.Runtime.SpriteAtlases.Abstract;
     using UniGame.Core.Runtime.Interfaces;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Services/AddressablesAtlasesService",fileName = nameof(AddressablesAtlasesService))]
+    [CreateAssetMenu(menuName = "UniGame/GameSystem/AddressablesAtlasesService",fileName = nameof(AddressablesAtlasesService))]
     public class AddressablesAtlasesServiceAsset : ServiceDataSourceAsset<IAddressablesAtlasesService>
     {
-        [DrawAssetReference]
-        [SerializeField]
-        private AssetReferenceT<AddressableSpriteAtlasConfiguration> _configuration;
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.DrawWithUnity]
+#endif
+        public AssetReferenceT<AddressableSpriteAtlasConfiguration> configuration;
         
         protected override async UniTask<IAddressablesAtlasesService> CreateServiceInternalAsync(IContext context)
         {
-            var config = await _configuration.LoadAssetTaskAsync(context.LifeTime);
+            var config = await configuration.LoadAssetTaskAsync(LifeTime);
+            await config.Execute();
+            
             var service = new AddressablesAtlasesService(config);
             
             context.Publish<IAddressablesAtlasesLoader>(service);
