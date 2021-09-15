@@ -1,4 +1,7 @@
-﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
+﻿using UniModules.UniCore.Runtime.Rx.Extensions;
+using UniRx;
+
+namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
 {
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UnityEngine;
@@ -20,8 +23,9 @@
         {
             var config = await configuration.LoadAssetTaskAsync(LifeTime);
             await config.Execute();
-            
-            var service = new AddressablesAtlasesService(config);
+
+            config.AddTo(LifeTime);
+            var service = new AddressablesAtlasesService(config).AddTo(LifeTime);
             
             context.Publish<IAddressablesAtlasesLoader>(service);
             context.Publish<IAddressableSpriteAtlasHandler>(config);

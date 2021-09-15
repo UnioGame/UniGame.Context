@@ -42,8 +42,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
             _disposableAction.Initialize(() => SetValue(null));
             
             context.LifeTime.AddDispose(_disposableAction);
-            context.LifeTime.AddCleanUpAction(() => GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT FINISHED", Color.red));
-
+#if UNITY_EDITOR
+            context.LifeTime.AddCleanUpAction(() => GameLog.Log($"CONTEXT CONTAINER {Name} CONTEXT FINISHED", Color.red));
+#endif
+            
             GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT VALUE UPDATE {context}", Color.red);
         }
 
