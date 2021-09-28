@@ -7,6 +7,11 @@
         
     }
     
+    public interface IAsyncContextStateStatus  : IAsyncState<IContext,AsyncStatus> 
+    {
+        
+    }
+    
     public interface IAsyncContextState  : IAsyncState<IContext> 
     {
         
