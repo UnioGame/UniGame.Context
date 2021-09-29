@@ -27,13 +27,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         public bool isShared = true;
         
         #endregion
-
-                
+        
         private AsyncValueGate<TApiValue> assetGate;
 
         protected IAsyncContextPrototype<TApiValue> Prototype =>
-            assetGate = assetGate ?? 
-                        new AsyncValueGate<TApiValue>(this, isProtected, isShared).AddTo(LifeTime);
+            assetGate ??= new AsyncValueGate<TApiValue>(this, isProtected, isShared).AddTo(LifeTime);
 
         protected override void OnReset()
         {
