@@ -33,7 +33,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 
         public bool useTimeout = true;
         
-        public float timeOut = 20000; 
+        public float timeOutMs = 60000; 
         
         #endregion
         
@@ -96,10 +96,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 
         private async UniTask HandleTimeout(string assetName, CancellationToken cancellationToken)
         {
-            if (!useTimeout || timeOut <= 0)
+            if (!useTimeout || timeOutMs <= 0)
                 return;
             
-            await UniTask.Delay(TimeSpan.FromMilliseconds(timeOut), cancellationToken: cancellationToken)
+            await UniTask.Delay(TimeSpan.FromMilliseconds(timeOutMs), cancellationToken: cancellationToken)
                 .AttachExternalCancellation(cancellationToken);
             
             GameLog.LogError($"{name} : REGISTER SOURCE TIMEOUT {assetName}");
