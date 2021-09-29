@@ -4,15 +4,15 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
     using Core.Runtime.ScriptableObjects;
     using Cysharp.Threading.Tasks;
-    using UniCore.Runtime.ProfilerTools;
     using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniContextData.Runtime.Interfaces;
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
-    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
+    using Addressables;
     using UnityEngine;
     using Object = UnityEngine.Object;
 
@@ -62,8 +62,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                 GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} END LIFETIME CONTEXT"));
             
             var source      = await sourceReference.LoadAssetTaskAsync(lifetime);
-            var sourceAsset = source as Object;
-            var sourceAssetName  = sourceAsset == null ? string.Empty : sourceAsset.name;
+            var sourceAsset     = source as Object;
+            var sourceAssetName = sourceAsset == null ? string.Empty : sourceAsset.name;
             
             switch (source)
             {
@@ -74,28 +74,37 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                     lifetimeScriptableObject.AddTo(LifeTime);
                     break;
             }
-
+            
+            var cancellationSource = new CancellationTokenSource();
+            
             if (useTimeout && timeOut > 0)
             {
-                var registerResult = await source.RegisterAsync(target).TimeoutWithoutException(TimeSpan.FromMilliseconds(timeOut));
-                if (registerResult.IsTimeout)
-                {
-                    GameLog.LogError($"{sourceName} : REGISTER SOURCE TIMEOUT {sourceAssetName}");
-                    return false;
-                }
+                HandleTimeout(sourceAssetName, cancellationSource.Token)
+                    .AttachExternalCancellation(cancellationSource.Token)
+                    .Forget();
             }
-            else
-            {
-                await source.RegisterAsync(target);
-            }
+          
+            await source.RegisterAsync(target);
 
+            cancellationSource.Cancel();
+            cancellationSource.Dispose();
+            
             GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}",Color.green);
+            
             return true;
         }
 
-        protected void OnDestroy()
+        private async UniTask HandleTimeout(string assetName, CancellationToken cancellationToken)
         {
-            Debug.LogError($"DESTROY {name}");
+            if (!useTimeout || timeOut <= 0)
+                return;
+            
+            await UniTask.Delay(TimeSpan.FromMilliseconds(timeOut), cancellationToken: cancellationToken)
+                .AttachExternalCancellation(cancellationToken);
+            
+            GameLog.LogError($"{name} : REGISTER SOURCE TIMEOUT {assetName}");
         }
+        
+        protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
     }
 }
