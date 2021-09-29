@@ -5,6 +5,7 @@
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
+    using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniGame.Core.Runtime.Rx;
     using UniRx;
     
@@ -19,14 +20,27 @@
         IDataValue<TValue,TApi> 
         where TValue : TApi
     {
+        #region inspector
+
+        public bool continuousUpdate = true;
+        
+        #endregion
+        
         private RecycleReactiveProperty<TValue> _value;
         
         public TApi Value => _value.Value;
 
         public bool HasValue => _value != null && _value.HasValue;
-        
+
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
+            if (continuousUpdate)
+            {
+                _value.Subscribe(context.Publish)
+                    .AddTo(context.LifeTime);
+                return context;
+            }
+            
             await UniTask.WaitWhile(() => HasValue == false);
             context.Publish(Value);
             return context;

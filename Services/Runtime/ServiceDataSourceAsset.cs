@@ -3,6 +3,7 @@
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Interfaces;
+    using UniCore.Runtime.Extension;
     using UniGame.Core.Runtime.Interfaces;
     using UniGame.Core.Runtime.ScriptableObjects;
     using UniModules.UniContextData.Runtime.Interfaces;
@@ -27,6 +28,8 @@
 
         public bool isSharedSystem = true;
 
+        public bool waitServiceReady = false;
+        
         #endregion
 
         private        TApi          _sharedService;
@@ -38,11 +41,10 @@
         {
             var service = await CreateServiceAsync(context);
         
-            service.IsReady.
-                Where(x => x).
-                Subscribe(x => context.Publish(service)).
-                AddTo(context.LifeTime);
+            if(waitServiceReady)
+                await service.IsReady.Where(x => x).AwaitFirstAsync(context.LifeTime);
 
+            context.Publish(service);
             return context;
         }
     

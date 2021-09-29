@@ -2,6 +2,7 @@
 
 namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
+    using System;
     using System.Collections.Generic;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
@@ -13,6 +14,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
     using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UniModules.UniGame.SerializableContext.Runtime.Addressables;
     using UnityEngine;
+    using Object = UnityEngine.Object;
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AddressablesAsyncSources", fileName = nameof(AsyncDataSources))]
     public class AsyncDataSources : AsyncContextDataSource
@@ -28,6 +30,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         [Sirenix.OdinInspector.LabelText("Async Sources")]
 #endif
         public List<AssetReferenceDataSource> sourceAssets = new List<AssetReferenceDataSource>();
+
+        public float msTimeOut = 5000; 
         
         #endregion
         
@@ -55,18 +59,32 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
             lifetime.AddCleanUpAction(() => 
                 GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} END LIFETIME CONTEXT"));
             
-            var source = await sourceReference.LoadAssetTaskAsync(lifetime);
-            if (source == null) {
-                GameLog.LogError($"Empty Data source found {sourceReference} GUID {sourceReference.AssetGUID}");
-                return false;
-            }
-
-            if (source is LifetimeScriptableObject ltSO)
+            var source      = await sourceReference.LoadAssetTaskAsync(lifetime);
+            var sourceAsset = source as Object;
+            var sourceAssetName  = sourceAsset == null ? string.Empty : sourceAsset.name;
+            
+            switch (source)
             {
-                ltSO.AddTo(LifeTime);
+                case null:
+                    GameLog.LogError($"Empty Data source found {sourceReference} GUID {sourceReference.AssetGUID}");
+                    return false;
+                case LifetimeScriptableObject lifetimeScriptableObject:
+                    lifetimeScriptableObject.AddTo(LifeTime);
+                    break;
             }
 
-            await source.RegisterAsync(target);
+            var registerResult = await source.RegisterAsync(target)
+                .TimeoutWithoutException(TimeSpan.FromMilliseconds(msTimeOut));
+
+            if (registerResult.IsTimeout)
+            {
+                GameLog.LogError($"{sourceName} : REGISTER SOURCE TIMEOUT {sourceAssetName}");
+            }
+            else
+            {
+                GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}",Color.green);
+            }
+
             return true;
 
         }

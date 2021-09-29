@@ -6,6 +6,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
     using Context.Runtime.Context;
     using Core.Runtime.Interfaces;
+    using UniContextData.Runtime.Interfaces;
     using UniCore.Runtime.ProfilerTools;
     using UniModules.UniContextData.Runtime.Entities;
     using UniModules.UniCore.Runtime.Rx.Extensions;
