@@ -31,7 +31,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 #endif
         public List<AssetReferenceDataSource> sourceAssets = new List<AssetReferenceDataSource>();
 
-        public float msTimeOut = 5000; 
+        public bool useTimeout = true;
+        
+        public float timeOut = 20000; 
         
         #endregion
         
@@ -73,20 +75,22 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                     break;
             }
 
-            var registerResult = await source.RegisterAsync(target)
-                .TimeoutWithoutException(TimeSpan.FromMilliseconds(msTimeOut));
-
-            if (registerResult.IsTimeout)
+            if (useTimeout && timeOut > 0)
             {
-                GameLog.LogError($"{sourceName} : REGISTER SOURCE TIMEOUT {sourceAssetName}");
+                var registerResult = await source.RegisterAsync(target).TimeoutWithoutException(TimeSpan.FromMilliseconds(timeOut));
+                if (registerResult.IsTimeout)
+                {
+                    GameLog.LogError($"{sourceName} : REGISTER SOURCE TIMEOUT {sourceAssetName}");
+                    return false;
+                }
             }
             else
             {
-                GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}",Color.green);
+                await source.RegisterAsync(target);
             }
 
+            GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}",Color.green);
             return true;
-
         }
 
         protected void OnDestroy()
