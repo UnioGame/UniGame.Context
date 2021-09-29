@@ -77,7 +77,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
             
             var cancellationSource = new CancellationTokenSource();
             
-            if (useTimeout && timeOut > 0)
+            if (useTimeout && timeOutMs > 0)
             {
                 HandleTimeout(sourceAssetName, cancellationSource.Token)
                     .AttachExternalCancellation(cancellationSource.Token)
