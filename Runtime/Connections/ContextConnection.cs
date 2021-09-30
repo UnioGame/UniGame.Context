@@ -35,7 +35,9 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
         public void Disconnect(IContext connection) => base.Remove(connection);
 
-        public IDisposable Connect(IContext source) => ReferenceEquals(source, _cachedContext) ? Disposable.Empty : Add(source);
+        public IDisposable Connect(IContext source) => ReferenceEquals(source, _cachedContext) || ReferenceEquals(source, this) 
+            ? Disposable.Empty
+            : Add(source);
 
         public bool Remove<TData>() => _cachedContext.Remove<TData>();
 
