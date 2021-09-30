@@ -8,6 +8,9 @@
         public static IContextConnection ToConnector(this IContext context)
         {
             var connector = new ContextConnection();
+            if (Equals(connector, context))
+                return connector;
+            
             connector.Broadcast(context);
             return connector;
         }

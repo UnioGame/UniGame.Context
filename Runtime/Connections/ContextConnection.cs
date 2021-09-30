@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using UniModules.UniCore.Runtime.ObjectPool.Runtime.Interfaces;
 
 namespace UniModules.UniGame.Context.Runtime.Connections
 {
@@ -36,7 +35,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
         public void Disconnect(IContext connection) => base.Remove(connection);
 
-        public IDisposable Connect(IContext source) => Add(source);
+        public IDisposable Connect(IContext source) => ReferenceEquals(source, _cachedContext) ? Disposable.Empty : Add(source);
 
         public bool Remove<TData>() => _cachedContext.Remove<TData>();
 
