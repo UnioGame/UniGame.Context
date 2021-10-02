@@ -25,16 +25,8 @@
 
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
-            var taskList = ClassPool.Spawn<List<UniTask<IContext>>>();
-
-            foreach (var t in sources) {
-                taskList.Add(t.RegisterAsync(context));
-            }
+            await UniTask.WhenAll(sources.Select(x => x.RegisterAsync(context).AttachExternalCancellation(LifeTime.TokenSource)));
             
-            await UniTask.WhenAll(taskList);
-            
-            taskList.Despawn();
-
             return context;
         }
 

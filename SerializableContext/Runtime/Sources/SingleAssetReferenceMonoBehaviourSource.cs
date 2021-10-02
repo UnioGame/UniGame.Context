@@ -1,4 +1,5 @@
 ﻿using UniCore.Runtime.ProfilerTools;
+using UniModules.UniGame.Core.Runtime.Extension;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.Components
 {
@@ -27,7 +28,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
 
             context.LifeTime.AddCleanUpAction(() => GameLog.Log($"Context {context.GetType().Name} {GetType().Name} LIFETIME FINISHED",Color.red));
             
-            var asset = await _prefabReference.LoadGameObjectAssetTaskAsync<TObject>(context.LifeTime);
+            var asset = await _prefabReference.LoadGameObjectAssetTaskAsync<TObject>(context.LifeTime)
+                .AttachExternalCancellation(LifeTime.TokenSource);
+            
             lock (this) {
                 if (!_instance) {
                     if (!asset) {
@@ -35,6 +38,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
                         return context;
                     }
                     _instance = Instantiate(asset).GetComponent<TObject>();
+                    _instance.gameObject.DestroyWith(LifeTime);
                 }
             }
             if (!_instance) {
@@ -42,7 +46,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
                 return context;
             }
 
-            var targetAsset = await OnInstanceReceive(_instance,context);
+            var targetAsset = await OnInstanceReceive(_instance,context)
+                .AttachExternalCancellation(LifeTime.TokenSource);
             
             context.Publish<TApi>(targetAsset);
 

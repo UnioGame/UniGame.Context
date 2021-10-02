@@ -19,9 +19,8 @@
         
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
-            var lifetime = context.LifeTime;
-            var tasks = Atlases.LoadScriptableAssetsTaskAsync<SpriteAtlas>(lifetime);
-            var atlases = await tasks;
+            var atlases = await UniTask.WhenAll(Atlases.Select(x => x.LoadAssetTaskAsync(LifeTime)))
+                .AttachExternalCancellation(LifeTime.TokenSource);
             context.Publish(atlases);
             return context;
         }

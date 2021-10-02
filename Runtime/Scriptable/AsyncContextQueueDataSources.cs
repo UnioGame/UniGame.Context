@@ -16,7 +16,7 @@
         {
             //await each data source registration as queue
             foreach (var t in sources) {
-                await t.RegisterAsync(context);
+                await t.RegisterAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
             }
             
             return context;

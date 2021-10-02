@@ -39,10 +39,16 @@
     
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
-            var service = await CreateServiceAsync(context);
-        
+            var service = await CreateServiceAsync(context)
+                .AttachExternalCancellation(LifeTime.TokenSource);
+
+            service.AddTo(LifeTime);
+            
             if(waitServiceReady)
-                await service.IsReady.Where(x => x).AwaitFirstAsync(context.LifeTime);
+                await service.IsReady
+                    .Where(x => x)
+                    .AwaitFirstAsync(context.LifeTime)
+                    .AttachExternalCancellation(LifeTime.TokenSource);
 
             context.Publish(service);
             return context;
@@ -55,10 +61,10 @@
         /// <returns></returns>
         public async UniTask<TApi> CreateServiceAsync(IContext context)
         {
-            await _semaphoreSlim.WaitAsync();
+            await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
             try {
                 if (isSharedSystem && _sharedService == null) {
-                    _sharedService = await CreateServiceInternalAsync(context);
+                    _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
                     _sharedService.AddTo(LifeTime);
                 }
             }
@@ -68,7 +74,10 @@
                 _semaphoreSlim.Release();
             }
 
-            var service = isSharedSystem ? _sharedService : (await CreateServiceInternalAsync(context)).AddTo(LifeTime);
+            var service = isSharedSystem 
+                ? _sharedService 
+                : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime);
+            
             return service;
         }
 

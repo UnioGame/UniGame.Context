@@ -41,7 +41,9 @@
                 return context;
             }
             
-            await UniTask.WaitWhile(() => HasValue == false);
+            await UniTask.WaitWhile(() => HasValue == false)
+                .AttachExternalCancellation(LifeTime.TokenSource);
+            
             context.Publish(Value);
             return context;
         }
@@ -63,6 +65,7 @@
         protected sealed override void OnReset()
         {
             base.OnReset();
+            _value = new RecycleReactiveProperty<TValue>();
             LifeTime?.AddCleanUpAction(_value.Release);
             ResetValue();
         }

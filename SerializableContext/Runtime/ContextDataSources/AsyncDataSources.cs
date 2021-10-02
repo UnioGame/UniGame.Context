@@ -53,15 +53,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         
         private async UniTask<bool> RegisterContexts(IContext target,AssetReferenceDataSource sourceReference)
         {
-            GameLog.Log($"RegisterContexts {name} {target.GetType().Name} LIFETIME CONTEXT");
-
             var sourceName = name;
-            var lifetime   = target.LifeTime;
             
-            lifetime.AddCleanUpAction(() => 
-                GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} END LIFETIME CONTEXT"));
+            GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
             
-            var source      = await sourceReference.LoadAssetTaskAsync(lifetime);
+            var source      = await sourceReference.LoadAssetTaskAsync(LifeTime);
             var sourceAsset     = source as Object;
             var sourceAssetName = sourceAsset == null ? string.Empty : sourceAsset.name;
             
@@ -81,10 +77,12 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
             {
                 HandleTimeout(sourceAssetName, cancellationSource.Token)
                     .AttachExternalCancellation(cancellationSource.Token)
+                    .SuppressCancellationThrow()
                     .Forget();
             }
           
-            await source.RegisterAsync(target);
+            await source.RegisterAsync(target)
+                .AttachExternalCancellation(LifeTime.TokenSource);
 
             cancellationSource.Cancel();
             cancellationSource.Dispose();

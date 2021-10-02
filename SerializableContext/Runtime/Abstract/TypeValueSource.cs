@@ -1,4 +1,5 @@
-﻿using UniModules.UniContextData.Runtime.Interfaces;
+﻿using System;
+using UniModules.UniContextData.Runtime.Interfaces;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
@@ -42,9 +43,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
             var value = await Prototype.Create(context);
+
             if (value is IAsyncContextDataSource dataSource)
             {
-                await dataSource.RegisterAsync(context);
+                await dataSource.RegisterAsync(context)
+                    .AttachExternalCancellation(LifeTime.TokenSource);
             }
             else
             {

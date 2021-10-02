@@ -1,4 +1,6 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Components
+﻿using UniModules.UniGame.Core.Runtime.Extension;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.Components
 {
     using System;
     using Context.Runtime.Abstract;
@@ -28,7 +30,7 @@
         {
             if (_instance == null || _instance.gameObject == null)
             {
-                var go = GameObject.Instantiate(_prefab.gameObject);
+                var go = Instantiate(_prefab.gameObject).DestroyWith(LifeTime);
                 _instance = go.GetComponent<TObject>();
                 if (_dontDestroy)
                 {
