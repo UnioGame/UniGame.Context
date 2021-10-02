@@ -99,7 +99,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
             
             await UniTask.Delay(TimeSpan.FromMilliseconds(timeOutMs), cancellationToken: cancellationToken)
                 .AttachExternalCancellation(cancellationToken);
-            
+
             GameLog.LogError($"{name} : REGISTER SOURCE TIMEOUT {assetName}");
         }
         

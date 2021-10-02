@@ -16,8 +16,10 @@
     public interface ISceneContext : 
         IReadOnlySceneContext, 
         IManagedBroadcaster<IMessagePublisher>,
-        IContext {
-        
+        IContext
+    {
+
+        void Release();
         
         void UpdateSceneStatus();
 

@@ -124,10 +124,10 @@
             _eventsProvider.Activated.Subscribe(x => OnActiveSceneChanged(x.previous, x.active)).AddTo(_lifeTime);
         }
 
-        private ISceneContext Find(int sceneHandle) {
-            if (_sceneContexts.TryGetValue(sceneHandle, out var context))
-                return context;
-            return dummyReadOnlySceneContext;
+        private ISceneContext Find(int sceneHandle)
+        {
+            return _sceneContexts.TryGetValue(sceneHandle, out var context) 
+                ? context : dummyReadOnlySceneContext;
         }
 
         private ISceneContext UpdateSceneContext(int sceneHandle) {
