@@ -96,11 +96,13 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         {
             if (!useTimeout || timeOutMs <= 0)
                 return;
+
+            var assetSourceName = name;
             
             await UniTask.Delay(TimeSpan.FromMilliseconds(timeOutMs), cancellationToken: cancellationToken)
                 .AttachExternalCancellation(cancellationToken);
 
-            GameLog.LogError($"{name} : REGISTER SOURCE TIMEOUT {assetName}");
+            GameLog.LogError($"{assetSourceName} : REGISTER SOURCE TIMEOUT {assetName}");
         }
         
         protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
