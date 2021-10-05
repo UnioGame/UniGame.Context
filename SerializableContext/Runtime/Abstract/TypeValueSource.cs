@@ -40,6 +40,12 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
             assetGate = null;
         }
 
+        public async UniTask<TApiValue> CreateAsync(IContext context)
+        {
+            var value = await Prototype.Create(context);
+            return value;
+        }
+
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
             var value = await Prototype.Create(context);
@@ -59,20 +65,18 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
             return context;
         }
 
-        public virtual async UniTask<IAsyncSourceValue<TApiValue>> Create(IContext context)
+        public virtual UniTask<IAsyncSourceValue<TApiValue>> Create(IContext context)
         {
             var value = Instantiate(this);
             //bind child lifetime to asset source
             value.AddTo(LifeTime);
 
-            return value;
+            return UniTask.FromResult<IAsyncSourceValue<TApiValue>>(value);
         }
 
-        public virtual async UniTask<TApiValue> CreateValue(IContext context) => Value;
+        public virtual UniTask<TApiValue> CreateValue(IContext context) => UniTask.FromResult<TApiValue>(Value);
 
-        protected virtual async UniTask OnRegisterAction(IContext context, TApiValue apiValue) {
-            
-        }
+        protected virtual UniTask OnRegisterAction(IContext context, TApiValue apiValue) { return UniTask.CompletedTask; }
         
     }
 
