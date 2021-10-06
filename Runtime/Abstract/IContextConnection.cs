@@ -6,8 +6,7 @@
 
     public interface IContextConnection : 
         IConnection<IContext>,
-        IContext,
-        IDisposable
+        IDisposableContext
     {
         IReadOnlyReactiveProperty<bool> IsEmpty { get; }
 
