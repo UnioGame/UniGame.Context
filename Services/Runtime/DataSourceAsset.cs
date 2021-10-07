@@ -1,56 +1,34 @@
 ﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 {
+    using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-    using Interfaces;
-    using UniCore.Runtime.Extension;
+    using UniContextData.Runtime.Interfaces;
+    using UniCore.Runtime.Rx.Extensions;
     using UniGame.Core.Runtime.Interfaces;
     using UniGame.Core.Runtime.ScriptableObjects;
-    using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Rx.Extensions;
-    using UniRx;
 
-    public interface IEmptyGameService : IGameService
-    {
-        
-    }
-
-    public abstract class ServiceDataSourceAsset : ServiceDataSourceAsset<IEmptyGameService>
-    {
-    }
-
-    
-    
-    public abstract class ServiceDataSourceAsset<TApi> :
+    public abstract class DataSourceAsset<TApi> :
         LifetimeScriptableObject,
         IAsyncContextDataSource
-        where TApi : class, IGameService
     {
         #region inspector
 
         public bool isSharedSystem = true;
-
-        public bool waitServiceReady = false;
         
         #endregion
 
-        private        TApi          _sharedService;
-        private        SemaphoreSlim _semaphoreSlim;
+        private TApi          _value;
+        private SemaphoreSlim _semaphoreSlim;
 
         #region public methods
     
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
-            var service = await CreateServiceAsync(context)
+            var result = await CreateAsync(context)
                 .AttachExternalCancellation(LifeTime.TokenSource);
 
-            if(waitServiceReady)
-                await service.IsReady
-                    .Where(x => x)
-                    .AwaitFirstAsync(context.LifeTime)
-                    .AttachExternalCancellation(LifeTime.TokenSource);
-
-            context.Publish(service);
+            context.Publish(result);
             return context;
         }
     
@@ -59,13 +37,14 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async UniTask<TApi> CreateServiceAsync(IContext context)
+        public async UniTask<TApi> CreateAsync(IContext context)
         {
             await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
             try {
-                if (isSharedSystem && _sharedService == null) {
-                    _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-                    _sharedService.AddTo(LifeTime);
+                if (isSharedSystem && _value == null) {
+                    _value = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
+                    if(_value is IDisposable disposable)
+                        disposable.AddTo(LifeTime);
                 }
             }
             finally {
@@ -74,22 +53,24 @@
                 _semaphoreSlim.Release();
             }
 
-            var service = isSharedSystem 
-                ? _sharedService 
-                : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime);
+            if (isSharedSystem)
+                return _value;
+
+            var value = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
+            if(value is IDisposable disposableValue)
+                disposableValue.AddTo(LifeTime);
             
-            return service;
+            return value;
         }
 
         #endregion
 
-        protected abstract UniTask<TApi> CreateServiceInternalAsync(IContext context);
+        protected abstract UniTask<TApi> CreateInternalAsync(IContext context);
 
         protected override void OnActivate()
         {
             _semaphoreSlim?.Dispose();
-            _semaphoreSlim = new SemaphoreSlim(1,1).
-                AddTo(LifeTime);
+            _semaphoreSlim = new SemaphoreSlim(1,1).AddTo(LifeTime);
             base.OnActivate();
         }
 
@@ -98,7 +79,6 @@
             base.OnReset();
             _semaphoreSlim?.Dispose();
             _semaphoreSlim = new SemaphoreSlim(1,1);
-            _sharedService = null;
         }
     }
 }
