@@ -17,6 +17,9 @@ namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
     {
         #region inspector
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.HideLabel]
+#endif
         public TValue defaultValue = default(TValue);
         
         #endregion

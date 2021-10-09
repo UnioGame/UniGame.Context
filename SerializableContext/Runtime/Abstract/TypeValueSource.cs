@@ -37,6 +37,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         protected override void OnReset()
         {
             base.OnReset();
+            assetGate?.Dispose();
             assetGate = null;
         }
 
