@@ -79,6 +79,7 @@
             base.OnReset();
             _semaphoreSlim?.Dispose();
             _semaphoreSlim = new SemaphoreSlim(1,1);
+            _value         = default;
         }
     }
 }
