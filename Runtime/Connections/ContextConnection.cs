@@ -4,6 +4,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 {
     using System;
     using Context;
+    using Core.Runtime.DataFlow;
     using Core.Runtime.Interfaces;
     using Core.Runtime.Rx;
     using UniCore.Runtime.Rx.Extensions;
@@ -17,7 +18,13 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         private readonly EntityContext _cachedContext = new EntityContext();
         private readonly RecycleReactiveProperty<bool> _isEmpty = new RecycleReactiveProperty<bool>(true);
 
-        public ContextConnection() => Reset();
+        public readonly int Id;
+
+        public ContextConnection()
+        {
+            Id = Unique.GetId();
+            Reset();
+        }
 
         #region properties
 
@@ -43,12 +50,22 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
         public TData Get<TData>()
         {
-            var result = _cachedContext.Get<TData>();
-            foreach (var c in _registeredItems)
+            var result = default(TData);
+            if (_cachedContext.Contains<TData>())
             {
-                if (result != null) break;
-                result = c.Get<TData>();
+                result = _cachedContext.Get<TData>();
+                if (result != null) return result;
             }
+            
+            foreach (var context in _registeredItems)
+            {
+                if (!context.Contains<TData>())
+                    continue;
+                result = context.Get<TData>();
+                if (result != null)
+                    return result;
+            }
+            
             return result;
         }
 
@@ -83,18 +100,13 @@ namespace UniModules.UniGame.Context.Runtime.Connections
         {
             //check exists
             if (_cachedContext.Contains<T>())
-            {
                 return _cachedContext.Receive<T>();
-            }
-
+            
             //create stream
             foreach (var context in _registeredItems)
-            {
                 AddContextReceiver<T>(context);
-            }
-
-            _registeredItems
-                .ObserveAdd()
+            
+            _registeredItems.ObserveAdd()
                 .Subscribe(x => AddContextReceiver<T>(x.Value))
                 .AddTo(_lifeTime);
 

@@ -140,6 +140,25 @@ namespace UniModules.UniGame.Context.Tests
         }
         
         [Test]
+        public void ReceiveAfterConnectTest()
+        {
+            //info
+            var connector   = new ContextConnection();
+            var context1    = new EntityContext();
+            var resultValue = 555;
+            
+            //action
+            connector.Connect(context1);
+            var value = connector.Get<int>();
+            Assert.That(value == 0);
+            
+            context1.Publish(resultValue);
+            
+            value = connector.Get<int>();
+            Assert.That(value == resultValue);
+        }
+        
+        [Test]
         public void ContextReceiveTest() 
         {
             //info
