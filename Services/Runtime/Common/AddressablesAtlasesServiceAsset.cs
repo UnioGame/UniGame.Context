@@ -22,7 +22,7 @@
         protected override async UniTask<IAddressablesAtlasesService> CreateServiceInternalAsync(IContext context)
         {
             var config = await configuration.LoadAssetTaskAsync(LifeTime);
-            await config.Execute();
+            await config.AddTo(LifeTime).Execute();
             
             var service = new AddressablesAtlasesService(config);
             if (unloadConfigurationOnReset)

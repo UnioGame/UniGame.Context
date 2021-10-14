@@ -29,7 +29,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Systems
 
         private TData _observableSource;
         
-        public bool IsActive => !_lifeTimeDefinition.IsTerminated;
+        public bool IsActive => !LifeTime.IsTerminated;
 
         public async UniTask<IDisposable> ExecuteAsync(TData source)
         {
