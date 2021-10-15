@@ -23,18 +23,11 @@
             
             Complete();
         }
-        
-        public async UniTask<bool> RequestSpriteAtlas(string guid)
-        {
-            return await _addressableSpriteAtlasHandler.RequestSpriteAtlas(guid);
-        }
 
         private void OnSceneChanged(Scene fromScene, Scene toScene)
         {
             if (fromScene.path == toScene.path)
                 return;
-            return;
-            _addressableSpriteAtlasHandler?.Unload();
         }
         
     }
