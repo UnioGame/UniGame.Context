@@ -8,27 +8,23 @@
     using UniGame.AddressableTools.Runtime.SpriteAtlases;
     using UniGame.Core.Runtime.Interfaces;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/AddressablesAtlasesService",fileName = "AddressablesAtlasesServiceSource")]
-    public class AddressablesAtlasesServiceAsset : ServiceDataSourceAsset<IAddressableAtlasService>
+    [CreateAssetMenu(menuName = "UniGame/GameSystem/" + nameof(AddressablesAtlasesSource),fileName = nameof(AddressablesAtlasesSource))]
+    public class AddressablesAtlasesSource : ServiceDataSourceAsset<IAddressableAtlasService>
     {
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.DrawWithUnity]
 #endif
-        public AssetReferenceT<AddressableSpriteAtlasConfiguration> configuration;
+        public AssetReferenceT<AddressableSpriteAtlasAsset> configuration;
 
-        public bool unloadConfigurationOnReset = true;
-        
         protected override async UniTask<IAddressableAtlasService> CreateServiceInternalAsync(IContext context)
         {
             var config = await configuration.LoadAssetTaskAsync(LifeTime);
             config.Initialize();
             config.AddTo(LifeTime);
 
-            var service = config.AtlasService;
-            if (!unloadConfigurationOnReset) return service;
+            var service = AddressableSpriteAtlasAsset.AtlasService;
             
             config.AddTo(LifeTime);
-            service.AddTo(LifeTime);
 
             return service;
         }
