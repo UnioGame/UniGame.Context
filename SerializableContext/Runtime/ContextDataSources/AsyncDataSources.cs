@@ -23,11 +23,13 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.InlineEditor()]
+        [Sirenix.OdinInspector.Searchable]
 #endif
         public List<ScriptableObject> sources = new List<ScriptableObject>();
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.LabelText("Async Sources")]
+        [Sirenix.OdinInspector.Searchable]
 #endif
         public List<AssetReferenceDataSource> sourceAssets = new List<AssetReferenceDataSource>();
 
