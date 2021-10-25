@@ -53,6 +53,7 @@
             _instance = null;
             _valueSource = null;
             _semaphoreSlim?.Dispose();
+            _semaphoreSlim = null;
         }
     }
 }
