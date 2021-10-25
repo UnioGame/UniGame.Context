@@ -18,9 +18,8 @@
     public abstract class ServiceDataSourceAsset : ServiceDataSourceAsset<IEmptyGameService>
     {
     }
-
     
-    
+        
     public abstract class ServiceDataSourceAsset<TApi> :
         LifetimeScriptableObject,
         IAsyncContextDataSource
@@ -31,6 +30,8 @@
         public bool isSharedSystem = true;
 
         public bool waitServiceReady = false;
+        
+        public bool bindWithLifetime = true;
         
         #endregion
 
@@ -65,7 +66,8 @@
             try {
                 if (isSharedSystem && _sharedService == null) {
                     _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-                    _sharedService.AddTo(LifeTime);
+                    if(bindWithLifetime)
+                        _sharedService.AddTo(LifeTime);
                 }
             }
             finally {
@@ -76,7 +78,9 @@
 
             var service = isSharedSystem 
                 ? _sharedService 
-                : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime);
+                : bindWithLifetime 
+                    ? (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime)
+                    : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource));
             
             return service;
         }
