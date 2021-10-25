@@ -29,16 +29,15 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         
         #endregion
         
-        private AsyncValueGate<TApiValue> assetGate;
+        private AsyncValueGate<TApiValue> _assetGate;
 
-        protected IAsyncContextPrototype<TApiValue> Prototype =>
-            assetGate ??= new AsyncValueGate<TApiValue>(this, isProtected, isShared).AddTo(LifeTime);
+        protected IAsyncFactory<IContext,TApiValue> Prototype => _assetGate ??= new AsyncValueGate<TApiValue>(this, isProtected, isShared);
 
         protected override void OnReset()
         {
             base.OnReset();
-            assetGate?.Dispose();
-            assetGate = null;
+            _assetGate?.Dispose();
+            _assetGate = new AsyncValueGate<TApiValue>(this,isProtected,isShared);
         }
 
         public async UniTask<TApiValue> CreateAsync(IContext context)

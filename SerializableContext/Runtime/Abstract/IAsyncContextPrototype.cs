@@ -4,8 +4,7 @@
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
 
-    public interface IAsyncContextPrototype<TValue> : IDisposable
+    public interface IAsyncContextPrototype<TResult> : IDisposable, IAsyncFactory<IContext,TResult>
     {
-        UniTask<TValue> Create(IContext context);
     }
 }
