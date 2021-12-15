@@ -1,4 +1,7 @@
-﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
+﻿using UniCore.Runtime.ProfilerTools;
+using UniModules.UniCore.Runtime.ProfilerTools;
+
+namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 {
     using System;
     using System.Threading;
@@ -25,9 +28,18 @@
     
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
+#if UNITY_EDITOR
+            var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
+#endif 
+            
             var result = await CreateAsync(context)
                 .AttachExternalCancellation(LifeTime.TokenSource);
-
+            
+#if UNITY_EDITOR
+            var watchResult = ProfilerUtils.GetWatchData(profileId);
+            GameLog.Log($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
+#endif
+            
             context.Publish(result);
             return context;
         }

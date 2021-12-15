@@ -1,5 +1,6 @@
 ﻿using System;
 using UniCore.Runtime.ProfilerTools;
+using UniModules.UniCore.Runtime.ProfilerTools;
 using UnityEngine;
 
 namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
@@ -46,9 +47,19 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
     
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
+            
+#if UNITY_EDITOR
+            var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
+#endif 
+            
             var service = await CreateServiceAsync(context)
                 .AttachExternalCancellation(LifeTime.TokenSource);
 
+#if UNITY_EDITOR
+            var watchResult = ProfilerUtils.GetWatchData(profileId);
+            GameLog.Log($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
+#endif
+            
             if(waitServiceReady)
                 await service.IsReady
                     .Where(x => x)
@@ -56,7 +67,8 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
                     .AttachExternalCancellation(LifeTime.TokenSource);
 
 #if UNITY_EDITOR
-            GameLog.Log($"{nameof(ServiceDataSourceAsset)} Create Service : {typeof(TApi).Name} AT : PlayerTime {Time.realtimeSinceStartup} {DateTime.Now}");
+            watchResult = ProfilerUtils.GetWatchData(profileId,true);
+            GameLog.Log($"GameService Profiler Publish: {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
 #endif
             
             context.Publish(service);

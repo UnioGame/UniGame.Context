@@ -14,13 +14,16 @@ namespace UniModules.UniGame.CoreModules.UniGame.Context.Runtime.Extension
     {
         public static async UniTask<TValue> ReceiveFirstAsync<TValue>(this IReadOnlyContext context)
         {
-            if (context == null) return default;
-            return await context.Receive<TValue>().AwaitFirstAsync(context.LifeTime);
+            return await context.ReceiveFirstAsync<TValue>(context.LifeTime);
         }
 
         public static async UniTask<TValue> ReceiveFirstAsync<TValue>(this IReadOnlyContext context, ILifeTime lifeTime)
         {
             if (context == null) return default;
+            
+            if (context.Contains<TValue>())
+                return context.Get<TValue>();
+            
             return await context.Receive<TValue>().AwaitFirstAsync(lifeTime);
         }
 
@@ -42,6 +45,9 @@ namespace UniModules.UniGame.CoreModules.UniGame.Context.Runtime.Extension
             TComponent result   = null;
             var        lifeTime = context.LifeTime;
 
+            if (context.Contains<TComponent>())
+                return context.Get<TComponent>();
+            
             while (lifeTime.IsTerminated == false)
             {
                 result = Object.FindObjectOfType<TComponent>();
