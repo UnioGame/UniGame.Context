@@ -1,4 +1,8 @@
-﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
+﻿using System;
+using UniCore.Runtime.ProfilerTools;
+using UnityEngine;
+
+namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 {
     using System.Threading;
     using Cysharp.Threading.Tasks;
@@ -51,6 +55,10 @@
                     .AwaitFirstAsync(context.LifeTime)
                     .AttachExternalCancellation(LifeTime.TokenSource);
 
+#if UNITY_EDITOR
+            GameLog.Log($"{nameof(ServiceDataSourceAsset)} Create Service : {typeof(TApi).Name} AT : PlayerTime {Time.realtimeSinceStartup} {DateTime.Now}");
+#endif
+            
             context.Publish(service);
             return context;
         }
