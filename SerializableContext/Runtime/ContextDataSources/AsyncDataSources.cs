@@ -21,12 +21,15 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
     {
         #region inspector
 
+        public bool enabled = true;
+        
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.InlineEditor()]
         [Sirenix.OdinInspector.Searchable]
 #endif
         public List<ScriptableObject> sources = new List<ScriptableObject>();
 
+        [Space]
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.LabelText("Async Sources")]
         [Sirenix.OdinInspector.Searchable]
@@ -41,6 +44,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
+            if (enabled == false)
+                return context;
+            
             foreach (var source in sources) {
                 if(!(source is IAsyncContextDataSource asyncSource)) 
                     continue;
