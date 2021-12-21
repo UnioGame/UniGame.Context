@@ -17,6 +17,8 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
     {
         #region inspector
 
+        public bool enabled = true;
+        
         public bool isSharedSystem = true;
         
         #endregion
@@ -28,6 +30,9 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
     
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
+            if (!enabled)
+                await UniTask.Never<IContext>(LifeTime.TokenSource);
+            
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
             GameLog.Log($"GameService Profiler Init : {typeof(TApi).Name} | {DateTime.Now}");
