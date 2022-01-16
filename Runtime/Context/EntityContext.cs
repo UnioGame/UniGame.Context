@@ -87,8 +87,14 @@
         public void Publish<T>(T message)
         {
             CheckLifeTimeValue(message);
-
             _data.Publish(message);
+            _broadcaster.Publish(message);
+        }
+        
+        public void PublishForce<T>(T message)
+        {
+            CheckLifeTimeValue(message);
+            _data.PublishForce(message);
             _broadcaster.Publish(message);
         }
 
