@@ -1,12 +1,12 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
+﻿using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Extensions;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
     using System;
     using Addressables;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
-    
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]

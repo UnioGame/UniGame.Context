@@ -1,4 +1,5 @@
 ﻿using UniCore.Runtime.ProfilerTools;
+using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Extensions;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
@@ -11,7 +12,6 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
     using Cysharp.Threading.Tasks;
     using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using Addressables;
     using UnityEngine;
     using Object = UnityEngine.Object;

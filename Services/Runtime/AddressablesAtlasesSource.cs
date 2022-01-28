@@ -1,11 +1,13 @@
-﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
+﻿using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Extensions;
+using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.SpriteAtlases;
+using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.SpriteAtlases.Abstract;
+
+namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
 {
     using UniModules.UniCore.Runtime.Rx.Extensions;
-    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using Cysharp.Threading.Tasks;
-    using UniGame.AddressableTools.Runtime.SpriteAtlases;
     using UniGame.Core.Runtime.Interfaces;
 
     [CreateAssetMenu(menuName = "UniGame/GameSystem/" + nameof(AddressablesAtlasesSource),fileName = nameof(AddressablesAtlasesSource))]

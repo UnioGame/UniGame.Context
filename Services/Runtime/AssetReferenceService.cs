@@ -1,4 +1,6 @@
-﻿namespace Taktika.GameResources.Addressables
+﻿using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.AssetReferencies;
+
+namespace Taktika.GameResources.Addressables
 {
     using System;
     using UniModules.UniGame.SerializableContext.Runtime.Addressables;

@@ -1,4 +1,6 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
+﻿using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.AssetReferencies;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
 {
     using System;
     using Core.Runtime.ScriptableObjects;
