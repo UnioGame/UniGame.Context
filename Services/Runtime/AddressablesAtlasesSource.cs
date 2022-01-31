@@ -1,9 +1,9 @@
-﻿using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Extensions;
-using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.SpriteAtlases;
-using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.SpriteAtlases.Abstract;
-
-namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
+﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
 {
+    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
+    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
+    using UniModules.UniGame.AddressableTools.Runtime.SpriteAtlases;
+    using UniModules.UniGame.AddressableTools.Runtime.SpriteAtlases.Abstract;
     using UniModules.UniCore.Runtime.Rx.Extensions;
     using UnityEngine;
     using UnityEngine.AddressableAssets;

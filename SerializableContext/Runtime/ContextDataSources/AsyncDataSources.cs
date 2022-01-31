@@ -1,8 +1,9 @@
 ﻿using UniCore.Runtime.ProfilerTools;
-using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Extensions;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
 {
+    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
+    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
     using System;
     using System.Collections.Generic;
     using System.Threading;

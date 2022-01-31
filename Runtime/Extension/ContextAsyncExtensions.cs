@@ -1,6 +1,6 @@
 using System;
 using UniModules.UniCore.Runtime.Extension;
-using UniModules.UniGame.CoreModules.UniGame.AddressableTools.Runtime.Rx;
+using UniGame.Addressables.Reactive;
 
 namespace UniModules.UniGame.CoreModules.UniGame.Context.Runtime.Extension
 {
