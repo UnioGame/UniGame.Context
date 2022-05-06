@@ -30,7 +30,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
                 SetValue(new EntityContext());
             }
 
-            this.Do(OnContextUpdated).Subscribe().AddTo(LifeTime);
+            this.Do(OnContextUpdated).RxSubscribe().AddTo(LifeTime);
         }
 
         private void OnContextUpdated(IContext context)

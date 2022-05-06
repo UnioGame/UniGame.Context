@@ -80,13 +80,13 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
             _registeredItems
                 .ObserveRemove()
-                .Subscribe(x => x.Value?.Break(_cachedContext))
+                .RxSubscribe(x => x.Value?.Break(_cachedContext))
                 .AddTo(LifeTime);
 
             _registeredItems
                 .ObserveCountChanged()
                 .Select(x => x == 0)
-                .Subscribe(x => _isEmpty.Value = x)
+                .RxSubscribe(x => _isEmpty.Value = x)
                 .AddTo(LifeTime);
 
             LifeTime.AddCleanUpAction(Reset);
@@ -107,7 +107,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
                 AddContextReceiver<T>(context);
             
             _registeredItems.ObserveAdd()
-                .Subscribe(x => AddContextReceiver<T>(x.Value))
+                .RxSubscribe(x => AddContextReceiver<T>(x.Value))
                 .AddTo(_lifeTime);
 
             return _cachedContext.Receive<T>();
@@ -127,7 +127,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
             _registeredItems
                 .ObserveRemove()
                 .Where(x => Equals(x.Value, context))
-                .Subscribe(x => UpdateValue<T>())
+                .RxSubscribe(x => UpdateValue<T>())
                 .AddTo(_lifeTime);
 
             context.Broadcast(_cachedContext)

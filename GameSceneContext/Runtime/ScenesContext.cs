@@ -119,9 +119,9 @@
         }
 
         private void Connect() {
-            _eventsProvider.Unloaded.Subscribe(OnSceneUnload).AddTo(_lifeTime);
-            _eventsProvider.Loaded.Subscribe(x => OnSceneLoad(x.scene, x.mode)).AddTo(_lifeTime);
-            _eventsProvider.Activated.Subscribe(x => OnActiveSceneChanged(x.previous, x.active)).AddTo(_lifeTime);
+            _eventsProvider.Unloaded.RxSubscribe(OnSceneUnload).AddTo(_lifeTime);
+            _eventsProvider.Loaded.RxSubscribe(x => OnSceneLoad(x.scene, x.mode)).AddTo(_lifeTime);
+            _eventsProvider.Activated.RxSubscribe(x => OnActiveSceneChanged(x.previous, x.active)).AddTo(_lifeTime);
         }
 
         private ISceneContext Find(int sceneHandle)
@@ -147,7 +147,7 @@
             //if status or scene mode changed
             sceneContext.Status.
                 CombineLatest(sceneContext.IsActive, (x, y) => sceneContext).
-                Subscribe(x => _sceneContextChanged.OnNext(sceneContext)).
+                RxSubscribe(x => _sceneContextChanged.OnNext(sceneContext)).
                 AddTo(_lifeTime);
 
             return sceneContext;

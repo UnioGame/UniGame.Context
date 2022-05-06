@@ -91,7 +91,7 @@ namespace UniModules.UniGame.Context.GameSceneContext.SceneContextNotifications 
 
         private void Start() {
             this.ReceiveFromAnyScene<SceneDemoTimeData>().
-                Subscribe(OnSceneMessageReceived).
+                RxSubscribe(OnSceneMessageReceived).
                 AddTo(this);
         }
 

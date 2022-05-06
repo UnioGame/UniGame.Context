@@ -15,15 +15,15 @@
         public SceneEventsProvider() {
             Observable.FromEvent(
                 x => SceneManager.sceneLoaded += OnSceneLoad,
-                x => SceneManager.sceneLoaded -= OnSceneLoad).Subscribe().AddTo(_lifeTime);
+                x => SceneManager.sceneLoaded -= OnSceneLoad).RxSubscribe().AddTo(_lifeTime);
 
             Observable.FromEvent(
                 x => SceneManager.sceneUnloaded += OnSceneUnload,
-                x => SceneManager.sceneUnloaded -= OnSceneUnload).Subscribe().AddTo(_lifeTime);
+                x => SceneManager.sceneUnloaded -= OnSceneUnload).RxSubscribe().AddTo(_lifeTime);
 
             Observable.FromEvent(
                 x => SceneManager.activeSceneChanged += OnActiveSceneChanged,
-                x => SceneManager.activeSceneChanged -= OnActiveSceneChanged).Subscribe().AddTo(_lifeTime);
+                x => SceneManager.activeSceneChanged -= OnActiveSceneChanged).RxSubscribe().AddTo(_lifeTime);
         }
 
         public IObservable<Scene>                             Unloaded  => _unloadSubject;

@@ -29,7 +29,7 @@
             
             button.onClick.
                 AsObservable().
-                Subscribe(x => intValue.SetValue(intValue.Value+1)).
+                RxSubscribe(x => intValue.SetValue(intValue.Value+1)).
                 AddTo(this);
         }
 

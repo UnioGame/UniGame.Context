@@ -63,7 +63,7 @@ namespace UniModules.UniGame.Context.Runtime.Context
             return context.
                 Receive<T>().
                 Do(x => GameLog.Log($"{typeof(T).Name} CONTEXT Get {x.GetType().Name}", Color.red)).
-                Subscribe();
+                RxSubscribe();
         }
         
         public static IDisposable LogValue<T>(this IContext context,string id)
@@ -71,7 +71,7 @@ namespace UniModules.UniGame.Context.Runtime.Context
             return context.
                 Receive<T>().
                 Do(x => GameLog.Log($"{id} CONTEXT Get {x.GetType().Name}", Color.red)).
-                Subscribe();
+                RxSubscribe();
         }
         
         public static IContext LogValue<T>(this IContext context,string id, ILifeTime lifeTime)
