@@ -30,21 +30,17 @@
         public virtual bool Remove<TData>(TContext context)
         {
             var container = GetTypeData(context);
-            if (container == null)
-                return false;
-            return container.Remove<TData>();
+            return container != null && container.Remove<TData>();
         }
 
         public virtual bool RemoveContext(TContext context)
         {
-            if (_contexts.TryGetValue(context, out var contextData)) {
-                contextData.Despawn();
-                _contexts.Remove(context);
-                _contextsItems.Remove(context);
-                return true;
-            }
-
-            return false;
+            if (!_contexts.TryGetValue(context, out var contextData)) return false;
+            
+            _contexts.Remove(context);
+            _contextsItems.Remove(context);
+            contextData.DespawnWithRelease();
+            return true;
         }
 
         public TData Get<TData>(TContext context)
@@ -90,11 +86,12 @@
 
         protected TypeData GetTypeData(TContext context, bool createIfEmpty = false)
         {
-            if (!_contexts.TryGetValue(context, out var contextData) && createIfEmpty) {
-                contextData        = ClassPool.Spawn<TypeData>();
-                _contexts[context] = contextData;
-                _contextsItems.Add(context);
-            }
+            if (_contexts.TryGetValue(context, out var contextData) || !createIfEmpty) 
+                return contextData;
+            
+            contextData        = ClassPool.Spawn<TypeData>();
+            _contexts[context] = contextData;
+            _contextsItems.Add(context);
 
             return contextData;
         }
