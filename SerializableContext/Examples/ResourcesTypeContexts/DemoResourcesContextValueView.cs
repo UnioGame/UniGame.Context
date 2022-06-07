@@ -24,7 +24,7 @@
             intText = GetComponent<TextMeshProUGUI>();
             intContextValue = Resources.Load<IntContextValue>(resourcePath);
             intContextValue.
-                RxSubscribe(x => intText.text = x.ToString()).
+                Subscribe(x => intText.text = x.ToString()).
                 AddTo(this);
         }
     }

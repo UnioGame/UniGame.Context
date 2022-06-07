@@ -25,7 +25,7 @@
             intText = GetComponent<TextMeshProUGUI>();
             intContextValue = await intContextResource.LoadAssetAsync<IntContextValue>().Task;
             intContextValue.
-                RxSubscribe(x => intText.text = x.ToString()).
+                Subscribe(x => intText.text = x.ToString()).
                 AddTo(this);
         }
     }

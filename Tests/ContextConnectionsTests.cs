@@ -48,16 +48,16 @@ namespace UniModules.UniGame.Context.Tests
             connector.Connect(context1);
             connector.Connect(context2);
 
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == startValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
             
             context2.Publish(20);
             
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == secondValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
             
             connector.Disconnect(context1);
             connector.Connect(context1);
 
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == startValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
         }
         
         [Test]
@@ -75,7 +75,7 @@ namespace UniModules.UniGame.Context.Tests
             //action
             var disposable = connector.Receive<int>().
                 Skip(1).
-                RxSubscribe(x => resultValue = x);
+                Subscribe(x => resultValue = x);
             
             context1.Publish(startValue);
             
@@ -107,16 +107,16 @@ namespace UniModules.UniGame.Context.Tests
             var disposable1 = connector.Connect(context1);
             var disposable2 = connector.Connect(context2);
 
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == startValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
 
             context2.Publish(20);
             
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == secondValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == secondValue));
 
             disposable1.Dispose();
             connector.Connect(context1);
 
-            connector.Receive<int>().First().RxSubscribe(x => Assert.That(x == startValue));
+            connector.Receive<int>().First().Subscribe(x => Assert.That(x == startValue));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace UniModules.UniGame.Context.Tests
             context2.Publish(20);
             
             //check
-            connector.Receive<int>().RxSubscribe(x => Assert.That(x == 20));
+            connector.Receive<int>().Subscribe(x => Assert.That(x == 20));
         }
         
         [Test]
@@ -171,7 +171,7 @@ namespace UniModules.UniGame.Context.Tests
             //check
             context1.Receive<int>().
                 First().
-                RxSubscribe(x => Assert.That(x == testValue));
+                Subscribe(x => Assert.That(x == testValue));
             context1.Release();
         }
         
@@ -186,7 +186,7 @@ namespace UniModules.UniGame.Context.Tests
             //action
             context1.Receive<int>().
                 First().
-                RxSubscribe(x => resultValue = x);
+                Subscribe(x => resultValue = x);
             
             context1.Publish(textValueFirst);
             context1.Release();
@@ -214,7 +214,7 @@ namespace UniModules.UniGame.Context.Tests
             context2.Publish(30);
             
             //check
-            connector.Receive<int>().RxSubscribe(x => Assert.That(x == 20));
+            connector.Receive<int>().Subscribe(x => Assert.That(x == 20));
 
             Assert.That(connector.Count == 0);
         }
@@ -238,7 +238,7 @@ namespace UniModules.UniGame.Context.Tests
             context2.Release();
             
             //check
-            connector.Receive<int>().RxSubscribe(x => Assert.That(x == 10));
+            connector.Receive<int>().Subscribe(x => Assert.That(x == 10));
 
             Assert.That(connector.Count == 1,$"connector.ConnectionsCount == {connector.Count}");
         }
@@ -263,7 +263,7 @@ namespace UniModules.UniGame.Context.Tests
             
             //check
             connector.Receive<int>().
-                RxSubscribe(x => Assert.That(x == 10,$"X value {x}"));
+                Subscribe(x => Assert.That(x == 10,$"X value {x}"));
 
             Assert.That(connector.Count == 1,$"connectors count {connector.Count}");
         }
@@ -286,7 +286,7 @@ namespace UniModules.UniGame.Context.Tests
 
             //check
             connector.Receive<int>().
-                RxSubscribe(x => Assert.That(x == 20));
+                Subscribe(x => Assert.That(x == 20));
 
             Assert.That(connector.Count == 2);
         }
@@ -309,13 +309,13 @@ namespace UniModules.UniGame.Context.Tests
             //check
             var disposable = connector.
                 Receive<int>().
-                RxSubscribe(x => Assert.That(x == 20,$"Connector value is {x}"));
+                Subscribe(x => Assert.That(x == 20,$"Connector value is {x}"));
             Assert.That(connector.Count == 2);
             
             disposable.Dispose();
             context2.Release();
             
-            connector.Receive<int>().RxSubscribe(x => Assert.That(x == 10));
+            connector.Receive<int>().Subscribe(x => Assert.That(x == 10));
             Assert.That(connector.Count == 1);
         }
 
@@ -326,7 +326,7 @@ namespace UniModules.UniGame.Context.Tests
             var value = new RecycleReactiveProperty<int>();
             
             //action
-            var disposable = value.RxSubscribe(x => Assert.That(x == int.MaxValue));
+            var disposable = value.Subscribe(x => Assert.That(x == int.MaxValue));
             disposable.Dispose();
             
             value.Value = 0;

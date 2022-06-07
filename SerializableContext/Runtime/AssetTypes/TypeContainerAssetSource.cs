@@ -36,7 +36,7 @@
         {
             if (continuousUpdate)
             {
-                _value.RxSubscribe(context.Publish)
+                _value.Subscribe(context.Publish)
                     .AddTo(context.LifeTime);
                 return context;
             }
@@ -49,7 +49,7 @@
         }
 
         public IDisposable Subscribe(IObserver<TApi> observer) =>
-            _value.RxSubscribe(api => observer.OnNext(api), observer.OnError, observer.OnCompleted);
+            _value.Subscribe(api => observer.OnNext(api), observer.OnError, observer.OnCompleted);
         
         public void SetValue(TValue value) => _value.Value = value;
       

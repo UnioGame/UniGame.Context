@@ -20,7 +20,7 @@ namespace UniModules.UniGame.Context.GameSceneContext.SceneContextNotifications 
 #endif
         private void Connect() {
             this.NotifyOnAllSceneContext().
-                RxSubscribe(LoadSceneContext).
+                Subscribe(LoadSceneContext).
                 AddTo(this);
         }
         

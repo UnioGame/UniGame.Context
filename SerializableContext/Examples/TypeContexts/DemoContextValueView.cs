@@ -16,7 +16,7 @@ namespace UniModules.UniGame.SerializableContext.Examples.TypeContexts
         private void Start()
         {
             intContextValue.
-                RxSubscribe(x => intText.text = x.ToString()).
+                Subscribe(x => intText.text = x.ToString()).
                 AddTo(this);
         }
     }
