@@ -1,9 +1,11 @@
 {
     "name": "unigame.context.tests",
+    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "unigame.unicore.runtime",
+        "unigame.rx.runtime",
         "unigame.contextdata.runtime",
         "unigame.context.scenecontext.runtime",
         "unigame.serializablecontext.runtime",

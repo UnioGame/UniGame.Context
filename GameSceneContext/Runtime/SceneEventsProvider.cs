@@ -1,7 +1,6 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime {
     using System;
     using UniCore.Runtime.DataFlow;
-    using UniCore.Runtime.Rx.Extensions;
     using UniRx;
     using UnityEngine.SceneManagement;
 

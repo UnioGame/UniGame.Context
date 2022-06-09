@@ -5,7 +5,6 @@
     using Core.Runtime.DataFlow.Interfaces;
     using Core.Runtime.Extension;
     using UniCore.Runtime.DataFlow;
-    using UniCore.Runtime.Rx.Extensions;
     using UniRx;
     using UnityEngine.SceneManagement;
 
