@@ -1,7 +1,6 @@
 ﻿using System;
 using UniCore.Runtime.ProfilerTools;
 using UniModules.UniCore.Runtime.ProfilerTools;
-using UnityEngine;
 
 namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 {
@@ -87,8 +86,10 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         {
             if (!enabled)
                 await UniTask.Never<TApi>(LifeTime.TokenSource);
-                
+
+            _semaphoreSlim ??= new SemaphoreSlim(1,1);
             await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
+            
             try {
                 if (isSharedSystem && _sharedService == null) {
                     _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
