@@ -12,7 +12,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Sources
     using UnityEngine;
     using UnityEngine.U2D;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/SpriteAtlasesSource", fileName = nameof(SpriteAtlasesSource))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/SpriteAtlasesSource", fileName = nameof(SpriteAtlasesSource))]
     public class SpriteAtlasesSource : AsyncContextDataSource
     {
         

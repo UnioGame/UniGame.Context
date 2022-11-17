@@ -10,7 +10,7 @@
     using UniRx;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AsyncSources", fileName = nameof(AsyncContextDataSources))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AsyncSources", fileName = nameof(AsyncContextDataSources))]
     public class AsyncContextDataSources : 
         AsyncContextDataSource
     {

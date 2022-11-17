@@ -17,7 +17,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
     using UnityEngine;
     using Object = UnityEngine.Object;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AddressablesAsyncSources", fileName = nameof(AsyncDataSources))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressablesAsyncSources", fileName = nameof(AsyncDataSources))]
     public class AsyncDataSources : AsyncContextDataSource
     {
         #region inspector

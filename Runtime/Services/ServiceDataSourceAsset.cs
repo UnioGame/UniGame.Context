@@ -6,7 +6,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 {
     using System.Threading;
     using Cysharp.Threading.Tasks;
-    using Interfaces;
+    using global::UniGame.GameFlow.Runtime.Interfaces;
     using UniCore.Runtime.Extension;
     using UniGame.Core.Runtime.Interfaces;
     using UniGame.Core.Runtime.ScriptableObjects;
@@ -61,12 +61,6 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
             var watchResult = ProfilerUtils.GetWatchData(profileId);
             GameLog.Log($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
 #endif
-            
-            if(waitServiceReady)
-                await service.IsReady
-                    .Where(x => x)
-                    .AwaitFirstAsync(context.LifeTime)
-                    .AttachExternalCancellation(LifeTime.TokenSource);
 
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             watchResult = ProfilerUtils.GetWatchData(profileId,true);

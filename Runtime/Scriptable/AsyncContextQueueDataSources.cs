@@ -6,7 +6,7 @@
     using UniModules.UniGame.Context.Runtime.Abstract;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AsyncSourceQueue", fileName = nameof(AsyncContextQueueDataSources))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AsyncSourceQueue", fileName = nameof(AsyncContextQueueDataSources))]
     public class AsyncContextQueueDataSources : 
         AsyncContextDataSource
     {

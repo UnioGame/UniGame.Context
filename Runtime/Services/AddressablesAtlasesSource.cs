@@ -10,7 +10,7 @@
     using Cysharp.Threading.Tasks;
     using UniGame.Core.Runtime.Interfaces;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/" + nameof(AddressablesAtlasesSource),fileName = nameof(AddressablesAtlasesSource))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/" + nameof(AddressablesAtlasesSource),fileName = nameof(AddressablesAtlasesSource))]
     public class AddressablesAtlasesSource : ServiceDataSourceAsset<IAddressableAtlasService>
     {
 #if ODIN_INSPECTOR

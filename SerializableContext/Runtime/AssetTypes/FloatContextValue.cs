@@ -1,10 +1,11 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+﻿using Modules.UniModules.UniGame.CoreModules.UniGame.Context.SerializableContext.Runtime.AssetTypes;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
-    using Abstract;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/Serializable Context/Float Value")]
-    public class FloatContextValue : TypeValueAsset<float>
+    public class FloatContextValue : ValueAsset<float>
     {
         
     }

@@ -1,28 +1,26 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+﻿using UnityEngine;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
     using System;
-    using Abstract;
     using Context.Runtime.Abstract;
     using Core.Runtime.Interfaces;
     using Cysharp.Threading.Tasks;
-    using UniCore.Runtime.Rx.Extensions;
     using UniModules.UniGame.Core.Runtime.Rx;
     using UniRx;
     
+    public class ValueContainerDataSource<TValue> :
+        ValueContainerDataSource<TValue, TValue> { }
 
-    public class TypeContainerAssetSource<TValue> :
-        TypeContainerAssetSource<TValue, TValue>
-    {
-    }
-
-    public class TypeContainerAssetSource<TValue,TApi> : 
-        AsyncContextDataSource, 
+    public class ValueContainerDataSource<TValue,TApi> : 
+        AsyncContextDataSource,
         IDataValue<TValue,TApi> 
         where TValue : TApi
     {
         #region inspector
 
-        public bool continuousUpdate = true;
+        [Tooltip("if true - publish each value update into registered context")]
+        public bool bindToValueUpdate = true;
         
         #endregion
         
@@ -30,21 +28,17 @@
         
         public TApi Value => _value.Value;
 
-        public bool HasValue => _value != null && _value.HasValue;
+        public bool HasValue => _value is { HasValue: true};
 
         public override async UniTask<IContext> RegisterAsync(IContext context)
         {
-            if (continuousUpdate)
-            {
-                _value.Subscribe(context.Publish)
-                    .AddTo(context.LifeTime);
-                return context;
-            }
+            var stream = bindToValueUpdate
+                ? _value
+                : _value.First();
             
-            await UniTask.WaitWhile(() => HasValue == false)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+            stream.Subscribe(context.Publish)
+                .AddTo(context.LifeTime);
             
-            context.Publish(Value);
             return context;
         }
 
@@ -70,10 +64,7 @@
             ResetValue();
         }
 
-        protected virtual void ResetValue()
-        {
-            
-        }
+        protected virtual void ResetValue() {}
 
         #endregion
         

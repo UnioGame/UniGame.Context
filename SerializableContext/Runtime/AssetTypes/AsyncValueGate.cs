@@ -10,8 +10,8 @@
         IAsyncContextPrototype<TValue>
     {
         private IAsyncSourceValue<TValue> _valueSource = null;
-        private bool isProtected = true;
-        private bool isShared = true;
+        private bool _isProtected = true;
+        private bool _isShared = true;
         private IAsyncSourceValue<TValue> _instance;
         private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 
@@ -21,8 +21,8 @@
             bool isShared = true)
         {
             this._valueSource = value;
-            this.isProtected = isProtected;
-            this.isShared = isShared;
+            this._isProtected = isProtected;
+            this._isShared = isShared;
         }
 
         public async UniTask<TValue> Create(IContext context)
@@ -31,12 +31,12 @@
             try
             {
                 _instance = _instance == null &&
-                            isProtected
+                            _isProtected
                     ? await _valueSource.Create(context)
                     : _valueSource;
 
-                var value = isShared && _instance.HasValue ? _instance.Value : await _instance.CreateValue(context);
-
+                var value = _isShared && _instance.HasValue 
+                    ? _instance.Value : await _instance.CreateValue(context);
                 return value;
             }
             finally

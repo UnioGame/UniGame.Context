@@ -1,11 +1,8 @@
-﻿using UniModules.UniGame.AddressableTools.Runtime.AssetReferencies;
-
-namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
+﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
 {
     using System;
     using Core.Runtime.ScriptableObjects;
     using UniContextData.Runtime.Interfaces;
-    using UnityEngine;
 
     [Serializable]
     public class AssetReferenceDataSource<TAsset> : AssetReferenceScriptableObject<TAsset,IAsyncContextDataSource> 

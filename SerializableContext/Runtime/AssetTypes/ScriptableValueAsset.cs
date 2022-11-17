@@ -4,13 +4,14 @@
     using UnityEngine;
 
     public abstract class ScriptableValueAsset<TValue> :
-        ScriptableValueAsset<TValue, TValue> where TValue : ScriptableValueAsset<TValue, TValue>
+        ScriptableValueAsset<TValue, TValue> where TValue 
+        : ScriptableValueAsset<TValue, TValue>
     {
         
     }
 
     public abstract class ScriptableValueAsset<TValue,TApi> : 
-        TypeValueAssetSource<TValue,TApi> 
+        AbstractValueAsset<TValue,TApi> 
         where TValue : ScriptableValueAsset<TValue,TApi>, TApi
     {
         

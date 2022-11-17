@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public class TypeValueDefaultAsset<TValue> : 
-        TypeValueDefaultAsset<TValue, TValue> 
+    public class DefaultValueAsset<TValue> : 
+        DefaultValueAsset<TValue, TValue> 
         where TValue :class, new(){ }
 }

@@ -1,10 +1,11 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+﻿using Modules.UniModules.UniGame.CoreModules.UniGame.Context.SerializableContext.Runtime.AssetTypes;
+
+namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 {
-    using Abstract;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/Serializable Context/Int Value")]
-    public class IntContextValue : TypeValueAsset<int>
+    public class IntContextValue : ValueAsset<int>
     {
         
     }

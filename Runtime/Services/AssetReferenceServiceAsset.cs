@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Systems
 {
     using System;
-    using Interfaces;
+    using global::UniGame.GameFlow.Runtime.Interfaces;
     using Services;
     using UnityEngine.AddressableAssets;
 

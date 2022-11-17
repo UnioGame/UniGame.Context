@@ -1,13 +1,11 @@
-﻿using System.Linq;
-
-namespace UniModules.UniGame.Context.Runtime.Connections
+﻿namespace UniModules.UniGame.Context.Runtime.Connections
 {
     using System;
+    using System.Linq;
     using Context;
     using Core.Runtime.DataFlow;
     using Core.Runtime.Interfaces;
     using Core.Runtime.Rx;
-    using UniCore.Runtime.Rx.Extensions;
     using UniRx;
 
     public class ContextConnection :
@@ -42,7 +40,8 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
         public void Disconnect(IContext connection) => base.Remove(connection);
 
-        public IDisposable Connect(IContext source) => ReferenceEquals(source, _cachedContext) || ReferenceEquals(source, this) 
+        public IDisposable Connect(IContext source) => 
+            ReferenceEquals(source, _cachedContext) || ReferenceEquals(source, this) 
             ? Disposable.Empty
             : Add(source);
 
@@ -71,7 +70,8 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 
         public bool Contains<TData>()
         {
-            return _cachedContext.Contains<TData>() || _registeredItems.Any(c => c.Contains<TData>());
+            return _cachedContext.Contains<TData>() 
+                   || _registeredItems.Any(c => c.Contains<TData>());
         }
 
         public void Reset()
@@ -140,9 +140,7 @@ namespace UniModules.UniGame.Context.Runtime.Connections
             {
                 var context = _registeredItems[i];
                 if (!context.Contains<T>())
-                {
                     continue;
-                }
 
                 var value = context.Get<T>();
                 Publish(value);
@@ -157,9 +155,6 @@ namespace UniModules.UniGame.Context.Runtime.Connections
             connection.LifeTime.AddCleanUpAction(() => Remove(connection));
         }
 
-        protected override void OnRelease()
-        {
-            _cachedContext.Release();
-        }
+        protected override void OnRelease() => _cachedContext.Release();
     }
 }

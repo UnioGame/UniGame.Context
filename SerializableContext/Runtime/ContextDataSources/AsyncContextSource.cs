@@ -8,7 +8,7 @@
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
     public class AsyncContextSource : AsyncContextDataSource
     {
 

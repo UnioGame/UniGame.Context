@@ -13,9 +13,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
     using UniRx;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameSystem/Assets/ContextContainerAsset", fileName = nameof(ContextContainerAsset))]
-    public class ContextContainerAsset :
-        TypeContainerAssetSource<IContext>
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/ContextDataSource", 
+        fileName = nameof(ContextDataSource))]
+    public class ContextDataSource : ValueContainerDataSource<IContext>
     {
         [SerializeField] private bool _createDefaultOnLoad = false;
 
@@ -26,11 +26,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
             base.OnActivate();
 
             if (_createDefaultOnLoad)
-            {
                 SetValue(new EntityContext());
-            }
 
-            this.Do(OnContextUpdated).Subscribe().AddTo(LifeTime);
+            this.Do(OnContextUpdated)
+                .Subscribe()
+                .AddTo(LifeTime);
         }
 
         private void OnContextUpdated(IContext context)
@@ -43,8 +43,10 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
             _disposableAction.Initialize(() => SetValue(null));
             
             context.LifeTime.AddDispose(_disposableAction);
+            
 #if UNITY_EDITOR
-            context.LifeTime.AddCleanUpAction(() => GameLog.Log($"CONTEXT CONTAINER {Name} CONTEXT FINISHED", Color.red));
+            context.LifeTime.AddCleanUpAction(() => GameLog
+                .Log($"CONTEXT CONTAINER {Name} CONTEXT FINISHED", Color.red));
 #endif
             
             GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT VALUE UPDATE {context}", Color.red);
