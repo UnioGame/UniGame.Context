@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Examples.ResourcesTypeContexts
 {
     using Runtime;
-    using UniModules.UniGame.SerializableContext.Runtime.AssetTypes;
+    using global::UniGame.Context.Runtime;
     using UniRx;
     using UnityEngine;
     using UnityEngine.UI;

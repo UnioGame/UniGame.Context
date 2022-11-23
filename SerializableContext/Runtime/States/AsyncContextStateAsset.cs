@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.States
 {
     using System;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     
     

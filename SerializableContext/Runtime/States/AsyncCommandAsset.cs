@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.States
 {
-    using Core.Runtime.Interfaces;
-    using Core.Runtime.ScriptableObjects;
+    using global::UniGame.Core.Runtime;
+    using global::UniGame.Core.Runtime.ScriptableObjects;
     using Cysharp.Threading.Tasks;
 
     public abstract class AsyncCommandAsset<TData, TValue> :

@@ -2,8 +2,8 @@
     using System;
     using System.Collections.Generic;
     using Abstract;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Extension;
+    using global::UniGame.Core.Runtime;
+    using global::UniGame.Core.Runtime.Extension;
     using UniCore.Runtime.DataFlow;
     using UniRx;
     using UnityEngine.SceneManagement;

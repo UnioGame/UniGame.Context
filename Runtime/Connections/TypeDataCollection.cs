@@ -3,13 +3,11 @@ namespace UniModules.UniGame.Context.Runtime.Connections
 {
     using System;
     using System.Runtime.CompilerServices;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UniCore.Runtime.Common;
     using UniCore.Runtime.DataFlow;
-    using UniCore.Runtime.ObjectPool.Runtime;
-    using UniCore.Runtime.ObjectPool.Runtime.Interfaces;
-    using UniCore.Runtime.Rx.Extensions;
+    using global::UniGame.Runtime.ObjectPool;
+    using global::UniGame.Core.Runtime.ObjectPool;
     using UniRx;
 
     public class TypeDataCollection<TData> : 

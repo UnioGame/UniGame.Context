@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
     using System.Threading;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Cysharp.Threading.Tasks;
     using UniModules.UniGame.SerializableContext.Runtime.Abstract;
 

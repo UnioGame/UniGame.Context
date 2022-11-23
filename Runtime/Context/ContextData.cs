@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using UniCore.Runtime.Common;
-    using UniCore.Runtime.ObjectPool.Runtime;
-    using UniCore.Runtime.ObjectPool.Runtime.Extensions;
-    using UniCore.Runtime.ObjectPool.Runtime.Interfaces;
-    using UniGame.Core.Runtime.Interfaces;
+    using global::UniGame.Runtime.ObjectPool;
+    using global::UniGame.Runtime.ObjectPool.Extensions;
+    using global::UniGame.Core.Runtime.ObjectPool;
+    using global::UniGame.Core.Runtime;
 
     public class ContextData<TContext> :
         IContextData<TContext>,

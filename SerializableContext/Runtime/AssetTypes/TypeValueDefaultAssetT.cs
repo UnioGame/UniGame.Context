@@ -4,6 +4,6 @@
 
     [Serializable]
     public class DefaultValueAsset<TValue> : 
-        DefaultValueAsset<TValue, TValue> 
+        ClassValueAsset<TValue, TValue> 
         where TValue :class, new(){ }
 }

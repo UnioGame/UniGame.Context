@@ -1,18 +1,16 @@
 ﻿using UniCore.Runtime.ProfilerTools;
+using UniModules.UniGame.Context.Runtime.Context;
+using UniModules.UniGame.SerializableContext.Runtime.Abstract;
 
-namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+namespace UniGame.Context.Runtime
 {
-    using Abstract;
-    using Context.Runtime.Context;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniContextData.Runtime.Interfaces;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Data/ContextAsset" , fileName = nameof(ContextAsset))]
     public class ContextAsset : 
-        DefaultValueAsset<EntityContext,IContext>, 
+        ClassValueAsset<EntityContext,IContext>, 
         IContextDataSource,
         IAsyncContextDataSource
     {

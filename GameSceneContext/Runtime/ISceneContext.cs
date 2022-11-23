@@ -1,5 +1,5 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime {
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UniRx;
 
     public interface IReadOnlySceneContext : IMessageContext

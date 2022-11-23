@@ -1,8 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime {
     using System;
     using System.Collections.Generic;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UniCore.Runtime.DataFlow;
     using UniRx;
 

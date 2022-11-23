@@ -1,4 +1,4 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
+﻿namespace UniGame.Context.Runtime
 {
     using System;
     using UnityEngine;

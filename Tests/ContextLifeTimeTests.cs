@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UniModules.UniGame.Context.Runtime.Context;
-using UniModules.UniGame.Core.Runtime.Interfaces;
+using UniGame.Core.Runtime;
 using UnityEngine;
 
 namespace UniModules.UniGame.Context.Tests 

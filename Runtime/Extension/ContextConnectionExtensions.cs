@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.Runtime.Extension
 {
     using Connections;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     public static class ContextConnectionExtensions
     {

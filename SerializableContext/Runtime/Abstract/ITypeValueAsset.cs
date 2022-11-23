@@ -1,6 +1,6 @@
 ﻿namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     public interface ITypeValueAsset<TValue,TApi> : 
         IDataValue<TValue, TApi>,

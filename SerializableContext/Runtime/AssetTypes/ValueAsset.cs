@@ -14,6 +14,7 @@ namespace Modules.UniModules.UniGame.CoreModules.UniGame.Context.SerializableCon
     public class ValueAsset<TValue,TApi> : AbstractValueAsset<TValue,TApi>
         where TValue : TApi
     {
+        
         #region inspector
 
         [Tooltip("if value empty it will be create on first call")]
@@ -33,4 +34,5 @@ namespace Modules.UniModules.UniGame.CoreModules.UniGame.Context.SerializableCon
             return defaultValue;
         }
     }
+
 }

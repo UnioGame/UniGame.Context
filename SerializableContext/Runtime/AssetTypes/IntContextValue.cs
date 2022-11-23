@@ -1,6 +1,6 @@
 ﻿using Modules.UniModules.UniGame.CoreModules.UniGame.Context.SerializableContext.Runtime.AssetTypes;
 
-namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+namespace UniGame.Context.Runtime
 {
     using UnityEngine;
 

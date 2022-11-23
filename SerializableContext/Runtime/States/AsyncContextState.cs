@@ -3,7 +3,7 @@
     using System;
     using Abstract;
     using Core.Runtime.AsyncOperations;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     [Serializable]
     public abstract class AsyncContextState : AsyncContextState<AsyncStatus>, IAsyncContextStateStatus

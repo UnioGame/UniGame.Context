@@ -1,6 +1,5 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Scenarios {
-    using Core.Runtime.Interfaces;
-    using UniRx;
+    using global::UniGame.Core.Runtime;
 
     public interface IAsyncContextRollback : IAsyncRollback<IContext> {
         

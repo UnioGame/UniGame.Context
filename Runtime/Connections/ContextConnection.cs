@@ -4,7 +4,7 @@
     using System.Linq;
     using Context;
     using Core.Runtime.DataFlow;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Core.Runtime.Rx;
     using UniRx;
 

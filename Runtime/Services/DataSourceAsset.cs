@@ -6,10 +6,9 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-    using UniContextData.Runtime.Interfaces;
-    using UniCore.Runtime.Rx.Extensions;
-    using UniGame.Core.Runtime.Interfaces;
-    using UniGame.Core.Runtime.ScriptableObjects;
+    using global::UniGame.Context.Runtime;
+    using global::UniGame.Core.Runtime;
+    using global::UniGame.Core.Runtime.ScriptableObjects;
 
     public abstract class DataSourceAsset<TApi> :
         LifetimeScriptableObject,
@@ -18,38 +17,41 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         #region inspector
 
         public bool enabled = true;
-        
+
         public bool isSharedSystem = true;
-        
+
+        public bool ownDataLifeTime = true;
+
         #endregion
 
-        private TApi          _value;
+        private TApi _sharedValue;
         private SemaphoreSlim _semaphoreSlim;
 
         #region public methods
-    
+
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
             if (!enabled)
                 await UniTask.Never<IContext>(LifeTime.TokenSource);
-            
+
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
             GameLog.Log($"GameService Profiler Init : {typeof(TApi).Name} | {DateTime.Now}");
-#endif 
-            
+#endif
+
             var result = await CreateAsync(context)
                 .AttachExternalCancellation(LifeTime.TokenSource);
-            
+
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var watchResult = ProfilerUtils.GetWatchData(profileId);
-            GameLog.Log($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
+            GameLog.Log(
+                $"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
 #endif
-            
+
             context.Publish(result);
             return context;
         }
-    
+
         /// <summary>
         /// service factory
         /// </summary>
@@ -58,26 +60,31 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         public async UniTask<TApi> CreateAsync(IContext context)
         {
             await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
-            try {
-                if (isSharedSystem && _value == null) {
-                    _value = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-                    if(_value is IDisposable disposable)
+            try
+            {
+                if (isSharedSystem && _sharedValue == null)
+                {
+                    _sharedValue = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
+                    if (_sharedValue is IDisposable disposable && ownDataLifeTime)
                         disposable.AddTo(LifeTime);
                 }
             }
-            finally {
+            finally
+            {
                 //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
                 //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
                 _semaphoreSlim.Release();
             }
 
             if (isSharedSystem)
-                return _value;
+                return _sharedValue;
 
-            var value = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-            if(value is IDisposable disposableValue)
+            var value = await CreateInternalAsync(context)
+                .AttachExternalCancellation(LifeTime.TokenSource);
+
+            if (value is IDisposable disposableValue && ownDataLifeTime)
                 disposableValue.AddTo(LifeTime);
-            
+
             return value;
         }
 
@@ -87,17 +94,14 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 
         protected override void OnActivate()
         {
-            _semaphoreSlim?.Dispose();
-            _semaphoreSlim = new SemaphoreSlim(1,1).AddTo(LifeTime);
-            base.OnActivate();
+            OnReset();
         }
 
-        protected override void OnReset()
+        private void OnReset()
         {
-            base.OnReset();
             _semaphoreSlim?.Dispose();
-            _semaphoreSlim = new SemaphoreSlim(1,1);
-            _value         = default;
+            _semaphoreSlim = new SemaphoreSlim(1, 1).AddTo(LifeTime);
+            _sharedValue = default;
         }
     }
 }

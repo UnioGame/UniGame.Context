@@ -7,12 +7,9 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using global::UniGame.GameFlow.Runtime.Interfaces;
-    using UniCore.Runtime.Extension;
-    using UniGame.Core.Runtime.Interfaces;
-    using UniGame.Core.Runtime.ScriptableObjects;
-    using UniModules.UniContextData.Runtime.Interfaces;
-    using UniModules.UniCore.Runtime.Rx.Extensions;
-    using UniRx;
+    using global::UniGame.Core.Runtime;
+    using global::UniGame.Core.Runtime.ScriptableObjects;
+    using global::UniGame.Context.Runtime;
 
     public interface IEmptyGameService : IGameService
     {
@@ -37,7 +34,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 
         public bool waitServiceReady = false;
         
-        public bool bindWithLifetime = true;
+        public bool ownServiceLifeTime = true;
         
         #endregion
 
@@ -87,7 +84,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
             try {
                 if (isSharedSystem && _sharedService == null) {
                     _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-                    if(bindWithLifetime)
+                    if(ownServiceLifeTime)
                         _sharedService.AddTo(LifeTime);
                 }
             }
@@ -99,7 +96,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 
             var service = isSharedSystem 
                 ? _sharedService 
-                : bindWithLifetime 
+                : ownServiceLifeTime 
                     ? (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime)
                     : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource));
             
@@ -110,19 +107,15 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 
         protected abstract UniTask<TApi> CreateServiceInternalAsync(IContext context);
 
-        protected override void OnActivate()
+        protected sealed override void OnActivate()
         {
-            _semaphoreSlim?.Dispose();
-            _semaphoreSlim = new SemaphoreSlim(1,1).
-                AddTo(LifeTime);
-            base.OnActivate();
+            OnReset();
         }
 
-        protected override void OnReset()
+        private void OnReset()
         {
-            base.OnReset();
             _semaphoreSlim?.Dispose();
-            _semaphoreSlim = new SemaphoreSlim(1,1);
+            _semaphoreSlim = new SemaphoreSlim(1,1).AddTo(LifeTime);
             _sharedService = null;
         }
     }

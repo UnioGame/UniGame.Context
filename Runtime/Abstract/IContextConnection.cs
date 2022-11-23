@@ -1,6 +1,6 @@
 ﻿namespace UniModules.UniGame.Context.Runtime.Connections
 {
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UniRx;
 
     public interface IContextConnection : 

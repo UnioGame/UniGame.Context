@@ -4,8 +4,7 @@ using UniModules.UniGame.Context.Runtime.Connections;
 namespace UniModules.UniGame.Context.Runtime.Context
 {
     using System;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UniRx;
     using UnityEngine;
 

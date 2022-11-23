@@ -2,8 +2,7 @@
 {
     using System;
     using Abstract;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Cysharp.Threading.Tasks;
 
     [Serializable]

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniModules.UniGame.Context.Runtime.Context;
-using UniModules.UniGame.Core.Runtime.Interfaces;
-using UniModules.UniGame.Core.Runtime.SerializableType;
+using UniGame.Core.Runtime;
+using UniGame.Core.Runtime.SerializableType;
 using UnityEngine;
 
 namespace UniModules.UniGame.CoreModules.UniGame.Context.Editor.ContextDependencyGenerator

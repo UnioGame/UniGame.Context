@@ -2,7 +2,7 @@
 {
     using System;
     using UniGame.Context.Runtime.Context;
-    using UniGame.Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using UnityEngine;
 
     public class EntityComponent : MonoBehaviour

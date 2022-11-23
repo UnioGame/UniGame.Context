@@ -2,7 +2,7 @@
 {
     using System;
     using Abstract;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     [Serializable]
     public class AsyncContextStateProxy : AsyncStateProxyValue<IContext, AsyncStatus>, IAsyncContextState

@@ -1,6 +1,6 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
 
     public interface IAsyncContextCommand<TValue> : IAsyncCommand<IContext,TValue>
     {

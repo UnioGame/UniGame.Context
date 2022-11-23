@@ -1,10 +1,8 @@
-﻿using UniModules.UniGame.AddressableTools.Runtime.AssetReferencies;
-
-namespace UniModules.UniGameFlow.GameFlow.Runtime.Systems
+﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Systems
 {
     using System;
     using Services;
-    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
+    using global::UniGame.Context.Runtime;
 
     [Serializable]
     public class AssetReferenceStateService : AssetReferenceScriptableObject<ServiceDataSourceAsset>

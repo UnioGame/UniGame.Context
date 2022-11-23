@@ -1,6 +1,6 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
-    using UniCore.Runtime.Attributes;
+    using global::UniCore.Runtime.Attributes;
     using UnityEngine;
 
     public abstract class ScriptableValueAsset<TValue> :

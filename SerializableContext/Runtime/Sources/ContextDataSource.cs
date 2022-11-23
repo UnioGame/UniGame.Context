@@ -1,15 +1,11 @@
-﻿using UniCore.Runtime.ProfilerTools;
-using UniModules.UniCore.Runtime.Common;
-using UniModules.UniCore.Runtime.ObjectPool.Runtime;
+﻿using UniModules.UniGame.Context.Runtime.Context;
 
-namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
+namespace UniGame.Context.Runtime
 {
-    using Context.Runtime.Context;
-    using Core.Runtime.Interfaces;
-    using UniContextData.Runtime.Interfaces;
+    using UniModules.UniCore.Runtime.Common;
+    using UniGame.Runtime.ObjectPool;
+    using global::UniGame.Core.Runtime;
     using UniCore.Runtime.ProfilerTools;
-    using UniModules.UniContextData.Runtime.Entities;
-    using UniModules.UniCore.Runtime.Rx.Extensions;
     using UniRx;
     using UnityEngine;
 
@@ -17,8 +13,11 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
         fileName = nameof(ContextDataSource))]
     public class ContextDataSource : ValueContainerDataSource<IContext>
     {
-        [SerializeField] private bool _createDefaultOnLoad = false;
+        [SerializeField] 
+        private bool _createDefaultOnLoad = false;
 
+        private bool _ownContextLifeTime = true;
+        
         private DisposableAction _disposableAction;
         
         protected override void OnActivate()
@@ -26,7 +25,12 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
             base.OnActivate();
 
             if (_createDefaultOnLoad)
-                SetValue(new EntityContext());
+            {
+                var context = new EntityContext();
+                if (_ownContextLifeTime)
+                    context.AddTo(LifeTime);
+                SetValue(context);
+            }
 
             this.Do(OnContextUpdated)
                 .Subscribe()
@@ -50,13 +54,6 @@ namespace UniModules.UniGame.SerializableContext.Runtime.AssetTypes
 #endif
             
             GameLog.Log($"CONTEXT CONTAINER {name} CONTEXT VALUE UPDATE {context}", Color.red);
-        }
-
-        protected override void ResetValue()
-        {
-            base.ResetValue();
-            _disposableAction?.Complete();
-            SetValue(null);
         }
     }
 }

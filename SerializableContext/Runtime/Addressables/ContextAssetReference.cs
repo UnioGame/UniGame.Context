@@ -1,8 +1,6 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
+﻿namespace UniGame.Context.Runtime
 {
     using System;
-    using AssetTypes;
-    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
 
 #if ODIN_INSPECTOR
     [Sirenix.OdinInspector.DontApplyToListElements]

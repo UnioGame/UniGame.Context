@@ -1,13 +1,10 @@
-﻿using UniCore.Runtime.ProfilerTools;
-using UniModules.UniGame.SerializableContext.Runtime.Abstract;
-
-namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
+﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
+    using UniModules.UniGame.SerializableContext.Runtime.Abstract;
     using System;
-    using Core.Runtime.DataFlow.Interfaces;
-    using Core.Runtime.ScriptableObjects;
+    using global::UniGame.Core.Runtime;
+    using global::UniGame.Core.Runtime.ScriptableObjects;
     using UniCore.Runtime.Common;
-    using UnityEngine;
 
     [Serializable]
     public abstract class AbstractValueAsset<TValue,TApiValue> :
@@ -15,23 +12,22 @@ namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
         ITypeValueAsset<TValue,TApiValue>
         where TValue : TApiValue
     {
-        private ReactiveValue<TApiValue> contextValue = new ReactiveValue<TApiValue>();
+        private ReactiveValue<TApiValue> _reactiveValue = new ReactiveValue<TApiValue>();
         
         public TApiValue Value {
 
             get {
-                if (contextValue.IsValueType == false && contextValue.Value == null)
+                if (_reactiveValue.IsValueType == false && _reactiveValue.Value == null)
                     SetValue(CreateValue());
-                return contextValue.Value;
+                return _reactiveValue.Value;
             }
-            
         }
 
-        public bool HasValue => contextValue.HasValue;
+        public bool HasValue => _reactiveValue.HasValue;
         
         #region public methods
         
-        public IDisposable Subscribe(IObserver<TApiValue> observer) => contextValue.Subscribe(observer);
+        public IDisposable Subscribe(IObserver<TApiValue> observer) => _reactiveValue.Subscribe(observer);
 
         public void SetValue(TValue value) => ApplyValue(value);
         
@@ -39,27 +35,18 @@ namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 
         protected sealed override void OnActivate()
         {
-            contextValue = new ReactiveValue<TApiValue>();
-            LifeTime.AddDispose(contextValue);
+            _reactiveValue = new ReactiveValue<TApiValue>();
+            LifeTime.AddDispose(_reactiveValue);
             
             SetValue(CreateValue());
             OnInitialize(LifeTime);
         }
-        
-        protected override void OnReset()
-        {
-            SetValue(CreateValue());
-            LifeTime.AddDispose(contextValue);
-#if UNITY_EDITOR
-            LifeTime.AddCleanUpAction(OnResetAction);
-#endif
-        }
-        
+
         /// <summary>
         /// Apply Value to context
         /// </summary>
         /// <param name="value"></param>
-        protected virtual void ApplyValue(TApiValue value) => contextValue.SetValue(value);
+        protected virtual void ApplyValue(TApiValue value) => _reactiveValue.SetValue(value);
 
         /// <summary>
         /// Default context value
@@ -71,12 +58,8 @@ namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
         /// initialize default value state
         /// </summary>
         protected virtual void OnInitialize(ILifeTime lifetime) {}
-
-        private void OnResetAction()
-        {
-            if (!Application.isPlaying) return;
-            GameLog.Log($"TypeValueAsset: {GetType().Name} {name} : VALUE {Value} END OF LIFETIME",Color.red);
-        }
-
     }
+    
+    
+    
 }

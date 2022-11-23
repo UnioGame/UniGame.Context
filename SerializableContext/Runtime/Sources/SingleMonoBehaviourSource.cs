@@ -1,10 +1,8 @@
-﻿using UniModules.UniGame.Core.Runtime.Extension;
-
-namespace UniModules.UniGame.SerializableContext.Runtime.Components
+﻿
+namespace UniGame.Context.Runtime
 {
-    using System;
-    using Context.Runtime.Abstract;
-    using Core.Runtime.Interfaces;
+    using UniGame.Core.Runtime.ScriptableObjects;
+    using global::UniGame.Core.Runtime;
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
@@ -13,7 +11,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
     {
     }
 
-    public class SingleMonoBehaviourSource<TObject, TApi> : AsyncContextDataSource
+    public class SingleMonoBehaviourSource<TObject, TApi> : LifetimeScriptableObject, IAsyncContextDataSource
         where TObject : MonoBehaviour, TApi 
         where TApi : class
     {
@@ -21,21 +19,29 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
         private TObject _prefab;
         [SerializeField]
         private bool _dontDestroy = false;
+        [SerializeField]
+        private bool _ownGameObjectLifeTime = true;
+
+        #region static data
 
         private static TObject _instance;
 
+        #endregion
+        
         public TObject Asset => _instance;
 
-        public override async UniTask<IContext> RegisterAsync(IContext context)
+        public async UniTask<IContext> RegisterAsync(IContext context)
         {
             if (_instance == null || _instance.gameObject == null)
             {
-                var go = Instantiate(_prefab.gameObject).DestroyWith(LifeTime);
-                _instance = go.GetComponent<TObject>();
+                var go = Instantiate(_prefab.gameObject);
+                
+                if(_ownGameObjectLifeTime)
+                    go.DestroyWith(LifeTime);
                 if (_dontDestroy)
-                {
-                    DontDestroyOnLoad(_instance);
-                }
+                    DontDestroyOnLoad(_instance.gameObject);
+                
+                _instance = go.GetComponent<TObject>();
             }
 
             var instanceAsset = await OnInstanceReceive(_instance,context);
@@ -45,21 +51,17 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
             return context;
         }
 
-        protected override void OnReset()
+        protected virtual UniTask<TApi> OnInstanceReceive(TObject asset,IContext context)
         {
-            base.OnReset();
-            if (_instance != null && _instance.gameObject != null)
-            {
-                (_instance as IDisposable)?.Dispose();
-                GameObject.Destroy(_instance.gameObject);
-            }
+            return UniTask.FromResult<TApi>(asset);
+        }
+        
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        protected static void OnCleanUp()
+        {
             _instance = null;
-
         }
-
-        protected virtual async UniTask<TApi> OnInstanceReceive(TObject asset,IContext context)
-        {
-            return asset;
-        }
+#endif
     }
 }

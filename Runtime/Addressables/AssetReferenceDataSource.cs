@@ -1,8 +1,7 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.Addressables
+﻿namespace UniGame.Context.Runtime
 {
     using System;
     using Core.Runtime.ScriptableObjects;
-    using UniContextData.Runtime.Interfaces;
 
     [Serializable]
     public class AssetReferenceDataSource<TAsset> : AssetReferenceScriptableObject<TAsset,IAsyncContextDataSource> 

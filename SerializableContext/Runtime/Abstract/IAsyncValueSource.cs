@@ -1,4 +1,4 @@
-﻿using UniModules.UniContextData.Runtime.Interfaces;
+﻿using UniGame.Context.Runtime;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {

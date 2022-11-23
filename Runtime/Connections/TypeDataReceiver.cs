@@ -5,9 +5,9 @@ namespace UniModules.GameFlow.Runtime.Connections
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using UniModules.UniCore.Runtime.Common;
-    using UniModules.UniCore.Runtime.ObjectPool.Runtime;
-    using UniModules.UniCore.Runtime.ObjectPool.Runtime.Interfaces;
-    using UniModules.UniGame.Core.Runtime.Interfaces;
+    using global::UniGame.Runtime.ObjectPool;
+    using global::UniGame.Core.Runtime.ObjectPool;
+    using global::UniGame.Core.Runtime;
     using UniRx;
 
     

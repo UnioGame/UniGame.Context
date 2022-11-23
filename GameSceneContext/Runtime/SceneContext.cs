@@ -1,7 +1,7 @@
 ﻿namespace UniModules.UniGame.Context.GameSceneContext.Runtime {
     using System;
     using Context.Runtime.Context;
-    using Core.Runtime.DataFlow.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Core.Runtime.Rx;
     using UniContextData.Runtime.Entities;
     using UniCore.Runtime.DataFlow;

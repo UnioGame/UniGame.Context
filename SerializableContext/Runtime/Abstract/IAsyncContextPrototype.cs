@@ -1,10 +1,10 @@
 ﻿namespace UniModules.UniGame.Context.SerializableContext.Runtime.Abstract
 {
     using System;
-    using Core.Runtime.Interfaces;
-    using Cysharp.Threading.Tasks;
+    using global::UniGame.Core.Runtime;
 
-    public interface IAsyncContextPrototype<TResult> : IDisposable, IAsyncFactory<IContext,TResult>
+    public interface IAsyncContextPrototype<TResult> 
+        : IDisposable, IAsyncFactory<IContext,TResult>
     {
     }
 }

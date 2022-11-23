@@ -9,7 +9,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
     /// value Source with default constructor
     /// </summary>
     [Serializable]
-    public class DefaultValueAsset<TValue, TApiValue> : AbstractValueAsset<TValue, TApiValue>
+    public class ClassValueAsset<TValue, TApiValue> : AbstractValueAsset<TValue, TApiValue>
         where TValue :class, TApiValue, new()
     {
         #region inspector
@@ -28,7 +28,8 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         protected sealed override TValue CreateValue()
         {
             if (alwaysCreateNewValue) return new TValue();
-            return defaultValue ?? new TValue();
+            defaultValue = defaultValue ?? new TValue();
+            return defaultValue;
         }
     }
 

@@ -1,19 +1,17 @@
-﻿using UniCore.Runtime.ProfilerTools;
-using UniModules.UniGame.AddressableTools.Runtime.Extensions;
-using UniModules.UniGame.Core.Runtime.Extension;
-using UniModules.UniGame.SerializableContext.Runtime.Addressables;
-
-namespace UniModules.UniGame.SerializableContext.Runtime.Components
+﻿namespace UniGame.Context.Runtime
 {
+    using UniCore.Runtime.ProfilerTools;
+    using AddressableTools.Runtime;
+    using UniGame.Core.Runtime.ScriptableObjects;
     using System;
-    using Context.Runtime.Abstract;
-    using Core.Runtime.Interfaces;
+    using global::UniGame.Core.Runtime;
     using Cysharp.Threading.Tasks;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
 
     [Serializable]
-    public class SingleAssetReferenceMonoBehaviourSource<TObject, TApi> : AsyncContextDataSource
+    public class SingleAssetReferenceMonoBehaviourSource<TObject, TApi> 
+        : LifetimeScriptableObject, IAsyncContextDataSource
         where TObject : MonoBehaviour, TApi
     {
         [SerializeField] 
@@ -23,7 +21,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
 
         public TObject Asset => _instance;
 
-        public sealed override async UniTask<IContext> RegisterAsync(IContext context)
+        public async UniTask<IContext> RegisterAsync(IContext context)
         {
             GameLog.Log($"{GetType().Name} TRY REGISTER {typeof(TApi).Name}",Color.blue);
 
@@ -63,5 +61,13 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Components
         
         protected virtual void OnInstanceRegistered(TObject asset, IContext context) { }
 
+                
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        protected static void OnCleanUp()
+        {
+            _instance = null;
+        }
+#endif
     }
 }

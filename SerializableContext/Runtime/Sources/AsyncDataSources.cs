@@ -1,32 +1,29 @@
 ﻿using UniCore.Runtime.ProfilerTools;
 
-namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
+namespace UniGame.Context.Runtime.DataSources
 {
-    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
-    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
+    using Core.Runtime.Extension;
+    using Core.Runtime;
+    using Core.Runtime.ScriptableObjects;
+    using Runtime;
+    using AddressableTools.Runtime;
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using Context.Runtime.Abstract;
-    using Core.Runtime.Interfaces;
-    using Core.Runtime.ScriptableObjects;
     using Cysharp.Threading.Tasks;
-    using UniCore.Runtime.Rx.Extensions;
-    using UniModules.UniContextData.Runtime.Interfaces;
-    using Addressables;
     using UnityEngine;
     using Object = UnityEngine.Object;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressablesAsyncSources", fileName = nameof(AsyncDataSources))]
-    public class AsyncDataSources : AsyncContextDataSource
+    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableAsyncSources",
+        fileName = nameof(AsyncDataSources))]
+    public class AsyncDataSources : LifetimeScriptableObject, IAsyncContextDataSource
     {
         #region inspector
 
         public bool enabled = true;
-        
+
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.InlineEditor()]
-        [Sirenix.OdinInspector.Searchable]
+        [Sirenix.OdinInspector.InlineEditor()] [Sirenix.OdinInspector.Searchable]
 #endif
         public List<ScriptableObject> sources = new List<ScriptableObject>();
 
@@ -38,38 +35,47 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
         public List<AssetReferenceDataSource> sourceAssets = new List<AssetReferenceDataSource>();
 
         public bool useTimeout = true;
-        
-        public float timeOutMs = 60000; 
-        
+
+        public float timeOutMs = 60000;
+
         #endregion
-        
-        public override async UniTask<IContext> RegisterAsync(IContext context)
+
+        public async UniTask<IContext> RegisterAsync(IContext context)
         {
             if (enabled == false)
                 return context;
-            
-            foreach (var source in sources) {
-                if(!(source is IAsyncContextDataSource asyncSource)) 
+
+            foreach (var source in sources)
+            {
+                if (source is not IAsyncContextDataSource asyncSource)
                     continue;
-                asyncSource.RegisterAsync(context)
+                asyncSource.ToSharedInstance(LifeTime)
+                    .RegisterAsync(context)
                     .Forget();
             }
-            
-            await UniTask.WhenAll(sourceAssets.Select(x => RegisterContexts(context, x)));
+
+            await UniTask.WhenAll(sourceAssets
+                .Select(x => RegisterContexts(context, x)));
 
             return context;
         }
-        
-        private async UniTask<bool> RegisterContexts(IContext target,AssetReferenceDataSource sourceReference)
+
+        private async UniTask<bool> RegisterContexts(IContext target,
+            AssetReferenceDataSource sourceReference)
         {
             var sourceName = name;
-            
+
             GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
-            
-            var source      = await sourceReference.LoadAssetTaskAsync(LifeTime);
-            var sourceAsset     = source as Object;
-            var sourceAssetName = sourceAsset == null ? string.Empty : sourceAsset.name;
-            
+
+            var source = await sourceReference
+                .LoadAssetTaskAsync(LifeTime)
+                .ToSharedInstanceAsync();
+
+            var sourceAsset = source as Object;
+            var sourceAssetName = sourceAsset == null
+                ? string.Empty
+                : sourceAsset.name;
+
             switch (source)
             {
                 case null:
@@ -79,9 +85,9 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                     lifetimeScriptableObject.AddTo(LifeTime);
                     break;
             }
-            
+
             var cancellationSource = new CancellationTokenSource();
-            
+
             if (useTimeout && timeOutMs > 0)
             {
                 HandleTimeout(sourceAssetName, cancellationSource.Token)
@@ -89,15 +95,15 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                     .SuppressCancellationThrow()
                     .Forget();
             }
-          
+
             await source.RegisterAsync(target)
                 .AttachExternalCancellation(LifeTime.TokenSource);
 
             cancellationSource.Cancel();
             cancellationSource.Dispose();
-            
-            GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}",Color.green);
-            
+
+            GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}", Color.green);
+
             return true;
         }
 
@@ -107,13 +113,13 @@ namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
                 return;
 
             var assetSourceName = name;
-            
+
             await UniTask.Delay(TimeSpan.FromMilliseconds(timeOutMs), cancellationToken: cancellationToken)
                 .AttachExternalCancellation(cancellationToken);
 
             GameLog.LogError($"{assetSourceName} : REGISTER SOURCE TIMEOUT {assetName}");
         }
-        
+
         protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
     }
 }

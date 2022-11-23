@@ -1,22 +1,26 @@
-﻿namespace UniModules.UniGame.SerializableContext.Runtime.ContextDataSources
+﻿using UniGame.Core.Runtime.Extension;
+using UniGame.Core.Runtime.ScriptableObjects;
+
+namespace UniGame.Context.Runtime.DataSources
 {
-    using UniModules.UniGame.AddressableTools.Runtime.Extensions;
-    using Addressables;
+    using AddressableTools.Runtime;
     using System;
-    using Context.Runtime.Abstract;
-    using Core.Runtime.Interfaces;
+    using Core.Runtime;
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
-    public class AsyncContextSource : AsyncContextDataSource
+    public class AsyncContextSource : LifetimeScriptableObject, 
+        IAsyncContextDataSource
     {
-
         public ContextAssetReference contextAsset;
 
-        public override async UniTask<IContext> RegisterAsync(IContext context)
+        public async UniTask<IContext> RegisterAsync(IContext context)
         {
-            var contextReference = await contextAsset.LoadAssetTaskAsync(LifeTime);
+            var contextReference = await contextAsset
+                .LoadAssetTaskAsync<ContextAsset>(LifeTime)
+                .ToSharedInstanceAsync(LifeTime);
+            
             await contextReference.RegisterAsync(context);
 
             if (contextAsset.Asset is IDisposable disposable)

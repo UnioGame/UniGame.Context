@@ -1,12 +1,9 @@
-﻿using UniModules.UniGame.AddressableTools.Runtime.AssetReferencies;
-
-namespace Taktika.GameResources.Addressables
+﻿namespace UniGame.GameResources.Addressables
 {
     using System;
-    using UniModules.UniGame.SerializableContext.Runtime.Addressables;
+    using UniGame.Context.Runtime;
     using UniGame.GameFlow.Runtime.Interfaces;
     using UniModules.UniGameFlow.GameFlow.Runtime.Services;
-    using UniModules.UniGameFlow.GameFlow.Runtime.Systems;
     using UnityEngine;
 
     [Serializable]
