@@ -42,12 +42,20 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         
         #endregion
         
-        public UniTask<IContext> RegisterAsync(IContext context)
+        public async UniTask<IContext> RegisterAsync(IContext context)
         {
             var sharedAsset = this.ToSharedInstance();
-            context.Publish(sharedAsset.Value);
 
-            return UniTask.FromResult(context);
+            var api = await OnRegisterAsync(sharedAsset.GetValue(), context);
+            
+            context.Publish(api);
+            
+            return context;
+        }
+        
+        protected virtual UniTask<TApiValue> OnRegisterAsync(TValue value, IContext context)
+        {
+            return UniTask.FromResult<TApiValue>(value);
         }
         
         protected sealed override TValue CreateValue()
