@@ -16,7 +16,7 @@ namespace UniGame.Context.Runtime.DataSources
 
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableAsyncSources",
         fileName = nameof(AsyncDataSources))]
-    public class AsyncDataSources : LifetimeScriptableObject, IAsyncContextDataSource
+    public class AsyncDataSources : LifetimeScriptableObject, IAsyncDataSource
     {
         #region inspector
 
@@ -47,7 +47,7 @@ namespace UniGame.Context.Runtime.DataSources
 
             foreach (var source in sources)
             {
-                if (source is not IAsyncContextDataSource asyncSource)
+                if (source is not IAsyncDataSource asyncSource)
                     continue;
                 asyncSource.ToSharedInstance(LifeTime)
                     .RegisterAsync(context)

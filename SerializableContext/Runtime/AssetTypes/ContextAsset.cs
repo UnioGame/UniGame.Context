@@ -12,7 +12,7 @@ namespace UniGame.Context.Runtime
     public class ContextAsset : 
         ClassValueAsset<EntityContext,IContext>, 
         IContextDataSource,
-        IAsyncContextDataSource
+        IAsyncDataSource
     {
         public virtual void Register(IContext context)
         {

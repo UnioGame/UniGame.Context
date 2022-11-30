@@ -11,7 +11,7 @@ namespace UniGame.Context.Runtime.DataSources
 
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
     public class AsyncContextSource : LifetimeScriptableObject, 
-        IAsyncContextDataSource
+        IAsyncDataSource
     {
         public ContextAssetReference contextAsset;
 

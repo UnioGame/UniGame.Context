@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UniGame.Context.Runtime;
+using UniGame.Core.Runtime;
+using UniGame.Core.Runtime.Extension;
+using UnityEngine;
 
 namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
@@ -9,21 +13,42 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
     /// value Source with default constructor
     /// </summary>
     [Serializable]
-    public class ClassValueAsset<TValue, TApiValue> : AbstractValueAsset<TValue, TApiValue>
+    public class ClassValueAsset<TValue, TApiValue> 
+        : AbstractValueAsset<TValue, TApiValue>,IAsyncDataSource
         where TValue :class, TApiValue, new()
     {
         #region inspector
 
         [SerializeField]
+        public bool publishOriginValue = true;
+        
+        [SerializeField]
         public bool alwaysCreateNewValue = false;
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.HideIf(nameof(alwaysCreateNewValue))]
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+        [Sirenix.OdinInspector.BoxGroup("value")]
 #endif
         [SerializeField]
         public TValue defaultValue = default(TValue);
         
         #endregion
+
+        #region public properties
+        
+        public TValue GetValue() => Value as TValue;
+        
+        #endregion
+        
+        public UniTask<IContext> RegisterAsync(IContext context)
+        {
+            var sharedAsset = this.ToSharedInstance();
+            context.Publish(sharedAsset.Value);
+
+            return UniTask.FromResult(context);
+        }
         
         protected sealed override TValue CreateValue()
         {
@@ -31,6 +56,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
             defaultValue = defaultValue ?? new TValue();
             return defaultValue;
         }
+
     }
 
 }

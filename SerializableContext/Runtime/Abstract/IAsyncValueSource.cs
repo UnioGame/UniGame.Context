@@ -2,7 +2,7 @@
 
 namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
 {
-    public interface IAsyncValueSource<TValue> : IAsyncContextDataSource where TValue : class
+    public interface IAsyncValueSource<TValue> : IAsyncDataSource where TValue : class
     {
         TValue Value { get; }
         

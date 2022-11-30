@@ -14,7 +14,7 @@
     public class ValueContainerDataSource<TValue,TApi> : 
         LifetimeScriptableObject,
         IDataValue<TValue,TApi> ,
-        IAsyncContextDataSource
+        IAsyncDataSource
         where TValue : TApi
     {
         #region inspector

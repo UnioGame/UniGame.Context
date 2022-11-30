@@ -11,7 +11,7 @@ namespace UniGame.Context.Runtime
     {
     }
 
-    public class SingleMonoBehaviourSource<TObject, TApi> : LifetimeScriptableObject, IAsyncContextDataSource
+    public class SingleMonoBehaviourSource<TObject, TApi> : LifetimeScriptableObject, IAsyncDataSource
         where TObject : MonoBehaviour, TApi 
         where TApi : class
     {

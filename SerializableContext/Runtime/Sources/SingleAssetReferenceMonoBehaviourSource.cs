@@ -11,7 +11,7 @@
 
     [Serializable]
     public class SingleAssetReferenceMonoBehaviourSource<TObject, TApi> 
-        : LifetimeScriptableObject, IAsyncContextDataSource
+        : LifetimeScriptableObject, IAsyncDataSource
         where TObject : MonoBehaviour, TApi
     {
         [SerializeField] 

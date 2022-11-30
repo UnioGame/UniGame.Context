@@ -4,7 +4,7 @@
     using Core.Runtime.ScriptableObjects;
 
     [Serializable]
-    public class AssetReferenceDataSource<TAsset> : AssetReferenceScriptableObject<TAsset,IAsyncContextDataSource> 
+    public class AssetReferenceDataSource<TAsset> : AssetReferenceScriptableObject<TAsset,IAsyncDataSource> 
         where TAsset : LifetimeScriptableObject
     {
         public AssetReferenceDataSource(string guid) : base(guid) {}

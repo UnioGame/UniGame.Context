@@ -6,7 +6,7 @@ namespace UniModules.UniGame.Context.Runtime.Context
     using Cysharp.Threading.Tasks;
     using global::UniGame.Context.Runtime;
 
-    public abstract class AsyncObjectDataSource : MonoBehaviour, IAsyncContextDataSource
+    public abstract class AsyncObjectDataSource : MonoBehaviour, IAsyncDataSource
     {
 
         public abstract UniTask<IContext> RegisterAsync(IContext context);

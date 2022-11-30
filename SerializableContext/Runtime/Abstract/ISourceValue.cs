@@ -10,7 +10,7 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
     public interface ISourceValue<TApiValue> : 
         IObservableValue<TApiValue>, 
         IPrototype<ISourceValue<TApiValue>>,
-        IAsyncContextDataSource
+        IAsyncDataSource
     {
     }
     

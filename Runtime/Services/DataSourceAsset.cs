@@ -12,7 +12,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 
     public abstract class DataSourceAsset<TApi> :
         LifetimeScriptableObject,
-        IAsyncContextDataSource
+        IAsyncDataSource
     {
         #region inspector
 

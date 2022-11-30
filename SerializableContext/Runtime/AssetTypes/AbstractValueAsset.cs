@@ -30,7 +30,7 @@
         public IDisposable Subscribe(IObserver<TApiValue> observer) => _reactiveValue.Subscribe(observer);
 
         public void SetValue(TValue value) => ApplyValue(value);
-        
+
         #endregion
 
         protected sealed override void OnActivate()

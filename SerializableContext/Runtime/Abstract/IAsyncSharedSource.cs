@@ -6,6 +6,6 @@ namespace UniGame.Rx.Runtime
 {
     public interface IAsyncSharedSource
     {
-        UniTask<IAsyncContextDataSource> GetSource<TAsset>(IContext context);
+        UniTask<IAsyncDataSource> GetSource<TAsset>(IContext context);
     }
 }
