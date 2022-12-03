@@ -20,9 +20,6 @@ namespace UniModules.UniGame.SerializableContext.Runtime.Abstract
         #region inspector
 
         [SerializeField]
-        public bool publishOriginValue = true;
-        
-        [SerializeField]
         public bool alwaysCreateNewValue = false;
 
 #if ODIN_INSPECTOR
