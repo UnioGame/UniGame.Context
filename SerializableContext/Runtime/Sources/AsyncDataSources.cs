@@ -9,6 +9,7 @@ namespace UniGame.Context.Runtime.DataSources
     using AddressableTools.Runtime;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using UnityEngine;
@@ -45,22 +46,22 @@ namespace UniGame.Context.Runtime.DataSources
             if (enabled == false)
                 return context;
 
-            foreach (var source in sources)
-            {
-                if (source is not IAsyncDataSource asyncSource)
-                    continue;
-                asyncSource.ToSharedInstance(LifeTime)
-                    .RegisterAsync(context)
-                    .Forget();
-            }
+            var syncSources = sources
+                .Where(x => x is IAsyncDataSource)
+                .Select(x => x.ToSharedInstance())
+                .Select(x => (x as IAsyncDataSource))
+                .Select(x => RegisterContexts(context,x));
 
-            await UniTask.WhenAll(sourceAssets
-                .Select(x => RegisterContexts(context, x)));
+            var asyncSources = sourceAssets
+                .Select(x => RegisterContexts(context, x));
+            
+            await UniTask.WhenAll(syncSources.Concat(asyncSources));
 
             return context;
         }
 
-        private async UniTask<bool> RegisterContexts(IContext target,
+        private async UniTask<bool> RegisterContexts(
+            IContext target,
             AssetReferenceDataSource sourceReference)
         {
             var sourceName = name;
@@ -68,8 +69,20 @@ namespace UniGame.Context.Runtime.DataSources
             GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
 
             var source = await sourceReference
-                .LoadAssetTaskAsync(LifeTime)
-                .ToSharedInstanceAsync();
+                .LoadAssetTaskAsync(target.LifeTime)
+                .ToSharedInstanceAsync(target.LifeTime);
+
+            var result = await RegisterContexts(target, source);
+
+            return result;
+        }
+        
+        
+        private async UniTask<bool> RegisterContexts(IContext target, IAsyncDataSource source)
+        {
+            var sourceName = name;
+
+            GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
 
             var sourceAsset = source as Object;
             var sourceAssetName = sourceAsset == null
@@ -79,7 +92,7 @@ namespace UniGame.Context.Runtime.DataSources
             switch (source)
             {
                 case null:
-                    GameLog.LogError($"Empty Data source found {sourceReference} GUID {sourceReference.AssetGUID}");
+                    GameLog.LogError($"Empty Data source found {sourceName} GUID {sourceAssetName}");
                     return false;
                 case LifetimeScriptableObject lifetimeScriptableObject:
                     lifetimeScriptableObject.AddTo(LifeTime);

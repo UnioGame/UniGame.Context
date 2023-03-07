@@ -84,8 +84,10 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
             try {
                 if (isSharedSystem && _sharedService == null) {
                     _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
-                    if(ownServiceLifeTime)
+                    if (ownServiceLifeTime)
+                    {
                         _sharedService.AddTo(LifeTime);
+                    }
                 }
             }
             finally {
