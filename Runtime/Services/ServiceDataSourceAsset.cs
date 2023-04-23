@@ -52,7 +52,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 #endif 
             
             var service = await CreateServiceAsync(context)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
 
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var watchResult = ProfilerUtils.GetWatchData(profileId);
@@ -76,14 +76,14 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         public async UniTask<TApi> CreateServiceAsync(IContext context)
         {
             if (!enabled)
-                await UniTask.Never<TApi>(LifeTime.TokenSource);
+                await UniTask.Never<TApi>(LifeTime.CancellationToken);
 
             _semaphoreSlim ??= new SemaphoreSlim(1,1);
-            await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
+            await _semaphoreSlim.WaitAsync(LifeTime.CancellationToken);
             
             try {
                 if (isSharedSystem && _sharedService == null) {
-                    _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
+                    _sharedService = await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.CancellationToken);
                     if (ownServiceLifeTime)
                     {
                         _sharedService.AddTo(LifeTime);
@@ -99,8 +99,8 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
             var service = isSharedSystem 
                 ? _sharedService 
                 : ownServiceLifeTime 
-                    ? (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource)).AddTo(LifeTime)
-                    : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource));
+                    ? (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.CancellationToken)).AddTo(LifeTime)
+                    : (await CreateServiceInternalAsync(context).AttachExternalCancellation(LifeTime.CancellationToken));
             
             return service;
         }

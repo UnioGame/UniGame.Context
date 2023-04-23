@@ -110,7 +110,7 @@ namespace UniGame.Context.Runtime.DataSources
             }
 
             await source.RegisterAsync(target)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
 
             cancellationSource.Cancel();
             cancellationSource.Dispose();

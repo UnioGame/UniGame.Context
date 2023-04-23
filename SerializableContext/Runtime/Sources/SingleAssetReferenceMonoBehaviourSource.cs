@@ -29,7 +29,7 @@
             
             var asset = await _prefabReference
                 .LoadGameObjectAssetTaskAsync<TObject>(context.LifeTime)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
             
             lock (this) {
                 if (!_instance) {
@@ -48,7 +48,7 @@
             }
 
             var targetAsset = await OnInstanceReceive(_instance,context)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
             
             context.Publish<TApi>(targetAsset);
 

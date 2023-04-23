@@ -32,7 +32,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
             if (!enabled)
-                await UniTask.Never<IContext>(LifeTime.TokenSource);
+                await UniTask.Never<IContext>(LifeTime.CancellationToken);
 
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
@@ -40,7 +40,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
 #endif
 
             var result = await CreateAsync(context)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
 
 #if UNITY_EDITOR || GAME_LOGS_ENABLED
             var watchResult = ProfilerUtils.GetWatchData(profileId);
@@ -59,12 +59,12 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         /// <returns></returns>
         public async UniTask<TApi> CreateAsync(IContext context)
         {
-            await _semaphoreSlim.WaitAsync(LifeTime.TokenSource);
+            await _semaphoreSlim.WaitAsync(LifeTime.CancellationToken);
             try
             {
                 if (isSharedSystem && _sharedValue == null)
                 {
-                    _sharedValue = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.TokenSource);
+                    _sharedValue = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.CancellationToken);
                     if (_sharedValue is IDisposable disposable && ownDataLifeTime)
                         disposable.AddTo(LifeTime);
                 }
@@ -80,7 +80,7 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
                 return _sharedValue;
 
             var value = await CreateInternalAsync(context)
-                .AttachExternalCancellation(LifeTime.TokenSource);
+                .AttachExternalCancellation(LifeTime.CancellationToken);
 
             if (value is IDisposable disposableValue && ownDataLifeTime)
                 disposableValue.AddTo(LifeTime);
