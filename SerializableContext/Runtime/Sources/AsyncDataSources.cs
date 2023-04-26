@@ -72,7 +72,9 @@ namespace UniGame.Context.Runtime.DataSources
                 .LoadAssetTaskAsync(target.LifeTime)
                 .ToSharedInstanceAsync(target.LifeTime);
 
-            var result = await RegisterContexts(target, source);
+            if (source is not IAsyncDataSource asyncSource) return false;
+            
+            var result = await RegisterContexts(target, asyncSource);
 
             return result;
         }
