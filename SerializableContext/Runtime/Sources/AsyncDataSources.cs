@@ -9,10 +9,14 @@ namespace UniGame.Context.Runtime.DataSources
     using AddressableTools.Runtime;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using UniModules.UniCore.Runtime.DataFlow;
+    using Unity.Profiling;
     using UnityEngine;
+    using Debug = UnityEngine.Debug;
     using Object = UnityEngine.Object;
 
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableAsyncSources",
@@ -24,7 +28,8 @@ namespace UniGame.Context.Runtime.DataSources
         public bool enabled = true;
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.InlineEditor()] [Sirenix.OdinInspector.Searchable]
+        [Sirenix.OdinInspector.InlineEditor()] 
+        [Sirenix.OdinInspector.Searchable]
 #endif
         public List<ScriptableObject> sources = new List<ScriptableObject>();
 
@@ -84,11 +89,11 @@ namespace UniGame.Context.Runtime.DataSources
         {
             var sourceName = name;
 
-            GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
+            GameLog.Log($"SOURCE: RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
 
             var sourceAsset = source as Object;
             var sourceAssetName = sourceAsset == null
-                ? string.Empty
+                ? source.GetType().Namespace
                 : sourceAsset.name;
 
             switch (source)
@@ -101,12 +106,17 @@ namespace UniGame.Context.Runtime.DataSources
                     break;
             }
 
-            var cancellationSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
+            
+#if DEBUG
+            var timer = Stopwatch.StartNew();   
+            timer.Restart();
+#endif
 
             if (useTimeout && timeOutMs > 0)
             {
-                HandleTimeout(sourceAssetName, cancellationSource.Token)
-                    .AttachExternalCancellation(cancellationSource.Token)
+                HandleTimeout(sourceAssetName, cancellationTokenSource.Token)
+                    .AttachExternalCancellation(cancellationTokenSource.Token)
                     .SuppressCancellationThrow()
                     .Forget();
             }
@@ -114,11 +124,17 @@ namespace UniGame.Context.Runtime.DataSources
             await source.RegisterAsync(target)
                 .AttachExternalCancellation(LifeTime.CancellationToken);
 
-            cancellationSource.Cancel();
-            cancellationSource.Dispose();
-
-            GameLog.Log($"{sourceName} : REGISTER SOURCE {sourceAssetName}", Color.green);
-
+#if DEBUG
+            var elapsed = timer.ElapsedMilliseconds;
+            timer.Stop();
+            GameLog.Log($"SOURCE: LOAD TIME {sourceAssetName} = {elapsed} ms");
+#endif
+            
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+            
+            GameLog.Log($"SOURCE: {sourceName} : REGISTER SOURCE {sourceAssetName}", Color.green);
+            
             return true;
         }
 
@@ -132,7 +148,7 @@ namespace UniGame.Context.Runtime.DataSources
             await UniTask.Delay(TimeSpan.FromMilliseconds(timeOutMs), cancellationToken: cancellationToken)
                 .AttachExternalCancellation(cancellationToken);
 
-            GameLog.LogError($"{assetSourceName} : REGISTER SOURCE TIMEOUT {assetName}");
+            GameLog.LogError($"SOURCE: {assetSourceName} : REGISTER SOURCE TIMEOUT {assetName}");
         }
 
         protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
