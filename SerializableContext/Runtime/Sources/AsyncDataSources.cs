@@ -127,13 +127,13 @@ namespace UniGame.Context.Runtime.DataSources
 #if DEBUG
             var elapsed = timer.ElapsedMilliseconds;
             timer.Stop();
-            GameLog.Log($"SOURCE: LOAD TIME {sourceAssetName} = {elapsed} ms");
+            GameLog.LogRuntime($"SOURCE: LOAD TIME {sourceAssetName} = {elapsed} ms");
 #endif
             
             cancellationTokenSource.Cancel();
             cancellationTokenSource.Dispose();
             
-            GameLog.Log($"SOURCE: {sourceName} : REGISTER SOURCE {sourceAssetName}", Color.green);
+            GameLog.LogRuntime($"SOURCE: {sourceName} : REGISTER SOURCE {sourceAssetName}", Color.green);
             
             return true;
         }
