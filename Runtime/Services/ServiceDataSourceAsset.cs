@@ -46,22 +46,22 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
         public async UniTask<IContext> RegisterAsync(IContext context)
         {
 
-#if UNITY_EDITOR || GAME_LOGS_ENABLED
+#if UNITY_EDITOR || GAME_LOGS_ENABLED || DEBUG
             var profileId = ProfilerUtils.BeginWatch($"Service_{typeof(TApi).Name}");
-            GameLog.Log($"GameService Profiler Init : {typeof(TApi).Name} | {DateTime.Now}");
+            GameLog.LogRuntime($"GameService Profiler Init : {typeof(TApi).Name} | {DateTime.Now}");
 #endif 
             
             var service = await CreateServiceAsync(context)
                 .AttachExternalCancellation(LifeTime.CancellationToken);
 
-#if UNITY_EDITOR || GAME_LOGS_ENABLED
+#if UNITY_EDITOR || GAME_LOGS_ENABLED || DEBUG
             var watchResult = ProfilerUtils.GetWatchData(profileId);
-            GameLog.Log($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
+            GameLog.LogRuntime($"GameService Profiler Create : {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
 #endif
 
-#if UNITY_EDITOR || GAME_LOGS_ENABLED
+#if UNITY_EDITOR || GAME_LOGS_ENABLED || DEBUG
             watchResult = ProfilerUtils.GetWatchData(profileId,true);
-            GameLog.Log($"GameService Profiler Publish: {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
+            GameLog.LogRuntime($"GameService Profiler Publish: {typeof(TApi).Name} | Take {watchResult.watchMs} | {DateTime.Now}");
 #endif
             
             context.Publish(service);
