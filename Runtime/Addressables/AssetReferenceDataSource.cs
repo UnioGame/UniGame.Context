@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Runtime.ScriptableObjects;
+    using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using Object = UnityEngine.Object;

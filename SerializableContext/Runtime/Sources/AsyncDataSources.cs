@@ -13,12 +13,18 @@ namespace UniGame.Context.Runtime.DataSources
     using System.Linq;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-    using UniModules.UniCore.Runtime.DataFlow;
-    using Unity.Profiling;
     using UnityEngine;
     using Debug = UnityEngine.Debug;
     using Object = UnityEngine.Object;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
+#if UNITY_EDITOR
+    using UniModules.Editor;
+#endif
+    
     [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableAsyncSources",
         fileName = nameof(AsyncDataSources))]
     public class AsyncDataSources : LifetimeScriptableObject, IAsyncDataSource
@@ -28,17 +34,18 @@ namespace UniGame.Context.Runtime.DataSources
         public bool enabled = true;
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.InlineEditor()] 
-        [Sirenix.OdinInspector.Searchable]
+        [InlineEditor()] 
+        [Searchable]
 #endif
         public List<ScriptableObject> sources = new List<ScriptableObject>();
-
+        
         [Space]
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.LabelText("Async Sources")]
-        [Sirenix.OdinInspector.Searchable]
+        [LabelText("Async Sources")]
+        [Searchable]
+        [ListDrawerSettings(ListElementLabelName = "Name")]
 #endif
-        public List<AssetReferenceDataSource> sourceAssets = new List<AssetReferenceDataSource>();
+        public List<AsyncSourceDescription> asyncSources = new List<AsyncSourceDescription>();
 
         public bool useTimeout = true;
 
@@ -57,30 +64,45 @@ namespace UniGame.Context.Runtime.DataSources
                 .Select(x => (x as IAsyncDataSource))
                 .Select(x => RegisterContexts(context,x));
 
-            var asyncSources = sourceAssets
+            var asyncValues = asyncSources
                 .Select(x => RegisterContexts(context, x));
             
-            await UniTask.WhenAll(syncSources.Concat(asyncSources));
+            await UniTask.WhenAll(syncSources.Concat(asyncValues));
 
             return context;
         }
 
         private async UniTask<bool> RegisterContexts(
             IContext target,
-            AssetReferenceDataSource sourceReference)
+            AsyncSourceDescription sourceReference)
         {
+            if(sourceReference.enabled == false)
+                return true;
+            
             var sourceName = name;
+            var sourceValue = sourceReference.source;
 
             GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
 
-            var source = await sourceReference
+            var source = await sourceValue
                 .LoadAssetTaskAsync(target.LifeTime)
                 .ToSharedInstanceAsync(target.LifeTime);
 
             if (source is not IAsyncDataSource asyncSource) return false;
-            
-            var result = await RegisterContexts(target, asyncSource);
 
+            var isAwaitLoading = sourceReference.awaitLoading;
+            var registerTask = RegisterContexts(target, asyncSource);
+
+            if (!isAwaitLoading)
+            {
+                registerTask
+                    .AttachExternalCancellation(target.LifeTime.CancellationToken)
+                    .Forget();
+
+                return true;
+            }
+
+            var result = await registerTask;
             return result;
         }
         
@@ -152,5 +174,36 @@ namespace UniGame.Context.Runtime.DataSources
         }
 
         protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
+        
+    }
+
+    [Serializable]
+    public class AsyncSourceDescription : ISearchFilterable
+    {
+        public bool enabled = true;
+        public bool awaitLoading = true;
+        
+        [DrawWithUnity]
+        public AssetReferenceDataSource source;
+        
+        public string Name {
+
+            get
+            {
+#if UNITY_EDITOR
+                return source == null || source.editorAsset == null 
+                    ? string.Empty
+                    : source.editorAsset.name;
+#endif
+                return string.Empty;
+            }
+            
+        }
+
+        public bool IsMatch(string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString)) return true;
+            return Name.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
     }
 }
