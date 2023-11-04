@@ -82,7 +82,7 @@ namespace UniGame.Context.Runtime.DataSources
             var sourceName = name;
             var sourceValue = sourceReference.source;
 
-            GameLog.Log($"RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
+            GameLog.Log($"SOURCE: RegisterContexts {sourceName} {target.GetType().Name} LIFETIME CONTEXT");
 
             var source = await sourceValue
                 .LoadAssetTaskAsync(target.LifeTime)
