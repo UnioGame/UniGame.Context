@@ -21,7 +21,9 @@ namespace UniGame.Context.Runtime.Extension
             if (context.Contains<TValue>())
                 return context.Get<TValue>();
             
-            return await context.Receive<TValue>().AwaitFirstAsync(lifeTime);
+            return await context
+                .Receive<TValue>()
+                .AwaitFirstAsync(lifeTime);
         }
 
         public static async UniTask<TValue> ReceiveFirstAsync<TValue>(this IReadOnlyContext context, IObservable<TValue> observable)
