@@ -96,7 +96,7 @@ namespace UniGame.Context.Runtime.DataSources
             if (!isAwaitLoading)
             {
                 registerTask
-                    .AttachExternalCancellation(target.LifeTime.CancellationToken)
+                    .AttachExternalCancellation(target.LifeTime.Token)
                     .Forget();
 
                 return true;
@@ -144,7 +144,7 @@ namespace UniGame.Context.Runtime.DataSources
             }
 
             await source.RegisterAsync(target)
-                .AttachExternalCancellation(LifeTime.CancellationToken);
+                .AttachExternalCancellation(LifeTime.Token);
 
 #if DEBUG
             var elapsed = timer.ElapsedMilliseconds;
