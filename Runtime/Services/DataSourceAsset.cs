@@ -64,7 +64,9 @@ namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
             {
                 if (isSharedSystem && _sharedValue == null)
                 {
-                    _sharedValue = await CreateInternalAsync(context).AttachExternalCancellation(LifeTime.Token);
+                    _sharedValue = await CreateInternalAsync(context)
+                        .AttachExternalCancellation(LifeTime.Token);
+                    
                     if (_sharedValue is IDisposable disposable && ownDataLifeTime)
                         disposable.AddTo(LifeTime);
                 }
