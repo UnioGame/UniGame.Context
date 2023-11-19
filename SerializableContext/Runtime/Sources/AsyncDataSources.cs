@@ -178,12 +178,17 @@ namespace UniGame.Context.Runtime.DataSources
     }
 
     [Serializable]
-    public class AsyncSourceDescription : ISearchFilterable
+    public class AsyncSourceDescription
+#if ODIN_INSPECTOR
+        : ISearchFilterable
+#endif
     {
         public bool enabled = true;
         public bool awaitLoading = true;
         
+#if ODIN_INSPECTOR
         [DrawWithUnity]
+#endif
         public AssetReferenceDataSource source;
         
         public string Name {
