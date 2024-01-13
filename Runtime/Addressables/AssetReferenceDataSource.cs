@@ -2,11 +2,14 @@
 {
     using System;
     using Core.Runtime.ScriptableObjects;
-    using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using Object = UnityEngine.Object;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     [Serializable]
     public class AssetReferenceDataSource<TAsset> : AssetReferenceScriptableObject<TAsset,IAsyncDataSource> 
         where TAsset : LifetimeScriptableObject
