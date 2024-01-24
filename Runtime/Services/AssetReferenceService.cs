@@ -3,7 +3,7 @@
     using System;
     using UniGame.Context.Runtime;
     using UniGame.GameFlow.Runtime.Interfaces;
-    using UniModules.UniGameFlow.GameFlow.Runtime.Services;
+    using GameFlow.Runtime.Services;
     using UnityEngine;
 
     [Serializable]

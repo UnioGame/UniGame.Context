@@ -1,4 +1,4 @@
-﻿namespace UniModules.UniGameFlow.GameFlow.Runtime.Services.Common
+﻿namespace UniGame.GameFlow.Runtime.Services.Common
 {
     using global::UniGame.AddressableTools.Runtime;
     using UniModules.UniGame.AddressableTools.Runtime.SpriteAtlases;

@@ -2,7 +2,7 @@
 {
     using System;
     using global::UniGame.GameFlow.Runtime.Interfaces;
-    using Services;
+    using global::UniGame.GameFlow.Runtime.Services;
     using UnityEngine.AddressableAssets;
 
     [Serializable]

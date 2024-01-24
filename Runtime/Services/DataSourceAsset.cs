@@ -1,7 +1,7 @@
 ﻿using UniCore.Runtime.ProfilerTools;
 using UniModules.UniCore.Runtime.ProfilerTools;
 
-namespace UniModules.UniGameFlow.GameFlow.Runtime.Services
+namespace UniGame.GameFlow.Runtime.Services
 {
     using System;
     using System.Threading;
