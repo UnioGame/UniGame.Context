@@ -24,7 +24,7 @@
         
         #endregion
         
-        private RecycleReactiveProperty<TValue> _value = new RecycleReactiveProperty<TValue>();
+        private ReactiveValue<TValue> _value = new ReactiveValue<TValue>();
         
         public TApi Value => _value.Value;
 
@@ -52,7 +52,7 @@
         protected override void OnActivate()
         {
             base.OnActivate();
-            _value = new RecycleReactiveProperty<TValue>();
+            _value = new ReactiveValue<TValue>();
             LifeTime.AddCleanUpAction(_value.Release);
         }
 

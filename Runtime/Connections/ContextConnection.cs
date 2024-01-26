@@ -14,7 +14,7 @@
         IResetable
     {
         private readonly EntityContext _cachedContext = new EntityContext();
-        private readonly RecycleReactiveProperty<bool> _isEmpty = new RecycleReactiveProperty<bool>(true);
+        private readonly ReactiveValue<bool> _isEmpty = new ReactiveValue<bool>(true);
 
         public readonly int Id;
 

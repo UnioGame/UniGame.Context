@@ -12,8 +12,8 @@
     {
         private readonly LifeTimeDefinition                   _lifeTime = new LifeTimeDefinition();
         private readonly EntityContext                        _context  = new EntityContext();
-        private readonly RecycleReactiveProperty<SceneStatus> _status   = new RecycleReactiveProperty<SceneStatus>(SceneStatus.Unload);
-        private readonly RecycleReactiveProperty<bool>        _isActive = new RecycleReactiveProperty<bool>(false);
+        private readonly ReactiveValue<SceneStatus> _status   = new ReactiveValue<SceneStatus>(SceneStatus.Unload);
+        private readonly ReactiveValue<bool>        _isActive = new ReactiveValue<bool>(false);
 
         private readonly int       _sceneHandle;
         private          SceneInfo _sceneInfo;

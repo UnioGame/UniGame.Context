@@ -323,7 +323,7 @@ namespace UniModules.UniGame.Context.Tests
         public void ReactivePropertyDisposeTest()
         {
             //info
-            var value = new RecycleReactiveProperty<int>();
+            var value = new ReactiveValue<int>();
             
             //action
             var disposable = value.Subscribe(x => Assert.That(x == int.MaxValue));
