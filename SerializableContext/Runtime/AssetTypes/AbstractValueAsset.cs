@@ -2,6 +2,7 @@
 {
     using UniModules.UniGame.SerializableContext.Runtime.Abstract;
     using System;
+    using Core.Runtime.Rx;
     using global::UniGame.Core.Runtime;
     using global::UniGame.Core.Runtime.ScriptableObjects;
     using UniCore.Runtime.Common;
