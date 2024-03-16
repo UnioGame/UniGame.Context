@@ -173,7 +173,7 @@ namespace UniGame.Context.Runtime.DataSources
             GameLog.LogError($"SOURCE: {assetSourceName} : REGISTER SOURCE TIMEOUT {assetName}");
         }
 
-        protected void OnDestroy() => Debug.LogError($"DESTROY {name}");
+        protected void OnDestroy() => GameLog.Log($"DESTROY {name}",Color.yellow);
         
     }
 
