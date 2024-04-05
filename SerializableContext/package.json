@@ -1,6 +1,6 @@
 {
   "name": "com.unigame.serializablecontext",
-  "author": "UniGameTeam",
+  "author": "UniGame",
   "displayName": "UniGame Serializable Context",
   "description": "Shared serializable context data for Unity",
   "unity": "2019.2",
