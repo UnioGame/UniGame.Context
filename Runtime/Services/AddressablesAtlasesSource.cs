@@ -8,7 +8,7 @@
     using Cysharp.Threading.Tasks;
     using global::UniGame.Core.Runtime;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/" + nameof(AddressablesAtlasesSource),fileName = nameof(AddressablesAtlasesSource))]
+    [CreateAssetMenu(menuName = "Game/Services/Addressable Atlases Service", fileName = "Addressable Atlases Service")]
     public class AddressablesAtlasesSource : ServiceDataSourceAsset<IAddressableAtlasService>
     {
 #if ODIN_INSPECTOR
