@@ -9,7 +9,12 @@ namespace UniGame.GameFlow.Runtime.Services
     using global::UniGame.Context.Runtime;
     using global::UniGame.Core.Runtime;
     using global::UniGame.Core.Runtime.ScriptableObjects;
-
+    using Sirenix.OdinInspector;
+    
+#if UNITY_EDITOR
+    using UniModules.Editor;
+#endif
+    
     public abstract class DataSourceAsset<TApi> :
         LifetimeScriptableObject,
         IAsyncDataSource
@@ -104,6 +109,17 @@ namespace UniGame.GameFlow.Runtime.Services
             _semaphoreSlim?.Dispose();
             _semaphoreSlim = new SemaphoreSlim(1, 1).AddTo(LifeTime);
             _sharedValue = default;
+        }
+
+
+#if ODIN_INSPECTOR
+        [Button]
+#endif
+        public void Save()
+        {
+#if UNITY_EDITOR
+            this.SaveAsset();
+#endif
         }
     }
 }

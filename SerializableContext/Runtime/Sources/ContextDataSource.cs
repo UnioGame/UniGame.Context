@@ -9,7 +9,7 @@ namespace UniGame.Context.Runtime
     using UniRx;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/ContextDataSource", 
+    [CreateAssetMenu(menuName = "UniGame/Sources/ContextDataSource", 
         fileName = nameof(ContextDataSource))]
     public class ContextDataSource : ValueContainerDataSource<IContext>
     {

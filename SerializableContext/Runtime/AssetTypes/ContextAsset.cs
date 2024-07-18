@@ -8,7 +8,7 @@ namespace UniGame.Context.Runtime
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Data/ContextAsset" , fileName = nameof(ContextAsset))]
+    [CreateAssetMenu(menuName = "UniGame/Data/ContextAsset" , fileName = nameof(ContextAsset))]
     public class ContextAsset : 
         ClassValueAsset<EntityContext,IContext>, 
         IContextDataSource,

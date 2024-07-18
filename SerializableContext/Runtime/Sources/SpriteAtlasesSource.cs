@@ -7,7 +7,7 @@
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/SpriteAtlasesSource", fileName = nameof(SpriteAtlasesSource))]
+    [CreateAssetMenu(menuName = "UniGame/Sources/SpriteAtlasesSource", fileName = nameof(SpriteAtlasesSource))]
     public class SpriteAtlasesSource : AsyncSource
     {
         public List<AssetReferenceSpriteAtlas> Atlases = new List<AssetReferenceSpriteAtlas>();

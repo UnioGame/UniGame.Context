@@ -9,7 +9,7 @@ namespace UniGame.Context.Runtime.DataSources
     using Cysharp.Threading.Tasks;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
+    [CreateAssetMenu(menuName = "UniGame/Sources/AddressableContextSource", fileName = nameof(AsyncContextSource))]
     public class AsyncContextSource : LifetimeScriptableObject, 
         IAsyncDataSource
     {

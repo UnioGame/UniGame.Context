@@ -25,8 +25,7 @@ namespace UniGame.Context.Runtime.DataSources
     using UniModules.Editor;
 #endif
     
-    [CreateAssetMenu(menuName = "UniGame/GameFlow/Sources/AddressableAsyncSources",
-        fileName = nameof(AsyncDataSources))]
+    [CreateAssetMenu(menuName = "UniGame/Sources/AddressableAsyncSources", fileName = nameof(AsyncDataSources))]
     public class AsyncDataSources : LifetimeScriptableObject, IAsyncDataSource
     {
         #region inspector
