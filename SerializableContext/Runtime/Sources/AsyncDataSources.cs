@@ -14,15 +14,15 @@ namespace UniGame.Context.Runtime.DataSources
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using UnityEngine;
-    using Debug = UnityEngine.Debug;
     using Object = UnityEngine.Object;
-
+    
 #if ODIN_INSPECTOR
     using Sirenix.OdinInspector;
 #endif
     
 #if UNITY_EDITOR
     using UniModules.Editor;
+    using UnityEditor;
 #endif
     
     [CreateAssetMenu(menuName = "UniGame/Sources/AddressableAsyncSources", fileName = nameof(AsyncDataSources))]
@@ -71,6 +71,17 @@ namespace UniGame.Context.Runtime.DataSources
             return context;
         }
 
+#if UNITY_EDITOR
+#if ODIN_INSPECTOR
+        [Button]
+#endif
+        public void Save()
+        {
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssetIfDirty(this);
+        }
+#endif
+        
         private async UniTask<bool> RegisterContexts(
             IContext target,
             AsyncSourceDescription sourceReference)
