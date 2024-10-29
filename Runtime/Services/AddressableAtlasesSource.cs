@@ -1,15 +1,15 @@
 ﻿namespace UniGame.GameFlow.Runtime.Services.Common
 {
     using global::UniGame.AddressableTools.Runtime;
-    using UniModules.UniGame.AddressableTools.Runtime.SpriteAtlases;
-    using UniModules.UniGame.AddressableTools.Runtime.SpriteAtlases.Abstract;
+    using AddressableTools.Runtime.SpriteAtlases;
+    using AddressableTools.Runtime.SpriteAtlases.Abstract;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using Cysharp.Threading.Tasks;
     using global::UniGame.Core.Runtime;
 
-    [CreateAssetMenu(menuName = "Game/Services/Addressable Atlases Service", fileName = "Addressable Atlases Service")]
-    public class AddressablesAtlasesSource : ServiceDataSourceAsset<IAddressableAtlasService>
+    [CreateAssetMenu(menuName = "UniGame/Services/Atlases/Service", fileName = "Addressable Atlases Service")]
+    public class AddressableAtlasesSource : ServiceDataSourceAsset<IAddressableAtlasService>
     {
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.DrawWithUnity]
