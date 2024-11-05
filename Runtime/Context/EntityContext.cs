@@ -134,4 +134,9 @@
 
         #endregion
     }
+
+    public static class GameContext
+    {
+        public static IContext Context;
+    }
 }
