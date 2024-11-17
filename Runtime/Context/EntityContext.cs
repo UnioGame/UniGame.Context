@@ -67,6 +67,8 @@
 
         public virtual TData Get<TData>() => _data.Get<TData>();
 
+        public virtual object Get(Type type) => _data.Get(type);
+        
         public bool Remove<TData>() => _data.Remove<TData>();
 
         public void RemoveSilent<TData>() => _data.RemoveSilent<TData>();
