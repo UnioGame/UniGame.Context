@@ -2,12 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
     using Core.Runtime.DataFlow;
+    using Cysharp.Threading.Tasks;
     using global::UniGame.Core.Runtime;
     using global::UniModules.GameFlow.Runtime.Connections;
     using UniCore.Runtime.Common;
     using UniCore.Runtime.DataFlow;
     using UniRx;
+    using UnityEngine;
 
     [Serializable]
     public class EntityContext :
@@ -140,5 +144,15 @@
     public static class GameContext
     {
         public static IContext Context;
+        //public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        
+        public static async UniTask<IContext> GetContextAsync(CancellationToken token = default)
+        {
+            if (Context != null)
+                return Context;
+
+            await UniTask.WaitWhile(() => Context == null,cancellationToken:token);
+            return Context;
+        }
     }
 }
