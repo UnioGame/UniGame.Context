@@ -47,6 +47,8 @@
 
         public bool Remove<TData>() => _cachedContext.Remove<TData>();
 
+        public object Get(Type type) => _cachedContext.Get(type);
+
         public TData Get<TData>()
         {
             var result = default(TData);

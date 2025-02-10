@@ -15,7 +15,6 @@
 
     [Serializable]
     public class EntityContext :
-        IManagedBroadcaster<IMessagePublisher>,
         IDisposableContext
     {
         private TypeData _data;

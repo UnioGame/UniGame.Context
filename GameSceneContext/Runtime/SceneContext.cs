@@ -89,6 +89,8 @@
 
         public bool HasValue => _context.HasValue;
 
+        public object Get(Type type) => _context.Get(type);
+
         public TData Get<TData>() => _context.Get<TData>();
 
         public bool Contains<TData>() => _context.Contains<TData>();
